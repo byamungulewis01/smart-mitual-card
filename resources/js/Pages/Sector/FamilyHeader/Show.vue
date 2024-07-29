@@ -2,15 +2,10 @@
 import SectorLayout from '@/Layouts/SectorLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
 
-defineProps({
-    canResetPassword: {
-        type: Boolean,
-    },
-    status: {
-        type: String,
-    },
+const props = defineProps({
+    family: Object,
 });
-
+const item = props.family.data;
 
 </script>
 
@@ -51,15 +46,16 @@ defineProps({
                             <div class="sm:flex items-center p-5 border-b dark:border-defaultborder/10 border-dashed">
                                 <div>
                                     <span class="avatar avatar-xl avatar-rounded me-4">
-                                        <img src="/assets/images/faces/9.jpg" alt="">
+                                        <img :src="'/storage/' + item.image" alt="">
                                     </span>
                                 </div>
                                 <div class="flex-grow main-profile-info">
                                     <div class="flex items-center !justify-between">
-                                        <h6 class="font-semibold mb-1 text-black text-[1rem]">Json Taylor</h6>
+                                        <h6 class="font-semibold mb-1 text-black text-[1rem]">{{ item.first_name }} {{
+                                            item.last_name }}</h6>
 
                                     </div>
-                                    <p class="mb-1 !text-black  opacity-[0.7]"> <strong> </strong>1199227733464466
+                                    <p class="mb-1 !text-black  opacity-[0.7]"> {{ item.national_id }}
                                     </p>
                                     <!-- <p class="text-[0.75rem] text-black mb-6 opacity-[0.5]">
                                         <span class="me-4 inline-flex"><i
@@ -78,7 +74,8 @@ defineProps({
                                             <div class="me-2 font-semibold">
                                                 Gender:
                                             </div>
-                                            <span class="text-[0.75rem] text-[#8c9097] dark:text-white/50">Male</span>
+                                            <span class="text-[0.75rem] text-[#8c9097] dark:text-white/50">{{
+                                                item.gender }}</span>
                                         </div>
                                     </li>
                                     <li class="list-group-item">
@@ -86,7 +83,8 @@ defineProps({
                                             <div class="me-2 font-semibold">
                                                 Category :
                                             </div>
-                                            <span class="text-[0.75rem] text-[#8c9097] dark:text-white/50">A</span>
+                                            <span class="text-[0.75rem] text-[#8c9097] dark:text-white/50">{{
+                                                item.category }}</span>
                                         </div>
                                     </li>
                                     <li class="list-group-item">
@@ -94,8 +92,8 @@ defineProps({
                                             <div class="me-2 font-semibold">
                                                 Phone :
                                             </div>
-                                            <span class="text-[0.75rem] text-[#8c9097] dark:text-white/50">+(555)
-                                                555-1234</span>
+                                            <span class="text-[0.75rem] text-[#8c9097] dark:text-white/50">{{ item.phone
+                                                }}</span>
                                         </div>
                                     </li>
 
@@ -104,7 +102,8 @@ defineProps({
                                             <div class="me-2 font-semibold">
                                                 Age :
                                             </div>
-                                            <span class="text-[0.75rem] text-[#8c9097] dark:text-white/50">28</span>
+                                            <span class="text-[0.75rem] text-[#8c9097] dark:text-white/50">{{ item.age
+                                                }}</span>
                                         </div>
                                     </li>
                                     <li class="list-group-item">
@@ -112,8 +111,8 @@ defineProps({
                                             <div class="me-2 font-semibold">
                                                 Date of Birth :
                                             </div>
-                                            <span class="text-[0.75rem] text-[#8c9097] dark:text-white/50">Nov 12,
-                                                2020</span>
+                                            <span class="text-[0.75rem] text-[#8c9097] dark:text-white/50">{{
+                                                item.dateOfBirth }}</span>
                                         </div>
                                     </li>
                                     <li class="list-group-item">
@@ -121,7 +120,8 @@ defineProps({
                                             <div class="me-2 font-semibold">
                                                 District :
                                             </div>
-                                            <span class="text-[0.75rem] text-[#8c9097] dark:text-white/50">Rubavu</span>
+                                            <span class="text-[0.75rem] text-[#8c9097] dark:text-white/50">{{
+                                                item.district }}</span>
                                         </div>
                                     </li>
                                     <li class="list-group-item">
@@ -129,8 +129,8 @@ defineProps({
                                             <div class="me-2 font-semibold">
                                                 Sector :
                                             </div>
-                                            <span
-                                                class="text-[0.75rem] text-[#8c9097] dark:text-white/50">Gisenyi</span>
+                                            <span class="text-[0.75rem] text-[#8c9097] dark:text-white/50">{{
+                                                item.sector }}</span>
                                         </div>
                                     </li>
                                     <li class="list-group-item">
@@ -138,7 +138,8 @@ defineProps({
                                             <div class="me-2 font-semibold">
                                                 Cell :
                                             </div>
-                                            <span class="text-[0.75rem] text-[#8c9097] dark:text-white/50">Kivumu</span>
+                                            <span class="text-[0.75rem] text-[#8c9097] dark:text-white/50">{{ item.cell
+                                                }}</span>
                                         </div>
                                     </li>
                                     <li class="list-group-item">
@@ -146,8 +147,8 @@ defineProps({
                                             <div class="me-2 font-semibold">
                                                 Village :
                                             </div>
-                                            <span
-                                                class="text-[0.75rem] text-[#8c9097] dark:text-white/50">Umutekano</span>
+                                            <span class="text-[0.75rem] text-[#8c9097] dark:text-white/50">{{
+                                                item.village }}</span>
                                         </div>
                                     </li>
                                 </ul>

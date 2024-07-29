@@ -18,7 +18,10 @@ return new class extends Migration
             $table->string('national_id')->unique();
             $table->date('dateOfBirth');
             $table->enum('gender', ['male','female']);
-            $table->enum('category', ['A','B','C','D']);
+            $table->string('image');
+            $table->string('phone')->nullable();
+            $table->enum('matialStatus', ['single','married','divorced','widowed']);
+            $table->foreignId('mutual_category')->constrained()->restrictOnUpdate();
             $table->integer('district');
             $table->integer('sector');
             $table->bigInteger('cell');

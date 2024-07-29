@@ -1,21 +1,26 @@
 <script setup>
 import { ref, watch } from 'vue';
+import { Inertia } from "@inertiajs/inertia";
+
 
 import SectorLayout from '@/Layouts/SectorLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3'
 import InputError from '@/Components/InputError.vue';
 import axios from 'axios';
 
-defineProps({
-    districts: {
-        type: Object,
-        required: true
-    },
+
+const props = defineProps({
+    districts: Object,
+    sectors: Object,
+    cells: Object,
+    villages: Object,
     categories: Object,
+    family: Object,
 
 });
+const family = props.family;
 
-const imageUrl = ref('/assets/images/faces/9.jpg'); // Default image URL
+const imageUrl = ref('/storage/' + family.image); // Default image URL
 const imageFile = ref(null);
 
 function onFileChange(event) {
@@ -34,67 +39,82 @@ function onFileChange(event) {
 
 function removeImage() {
     imageFile.value = null;
-    imageUrl.value = '/assets/images/faces/9.jpg'; // Reset to default image
+    imageUrl.value = '/storage/' + family.image; // Reset to default image
 }
 
 
 
 
 const form = useForm({
-    first_name: '',
-    last_name: '',
-    national_id: '',
-    dateOfBirth: '',
-    gender: '',
+    first_name: family.first_name,
+    last_name: family.last_name,
+    national_id: family.national_id,
+    dateOfBirth: family.dateOfBirth,
+    gender: family.gender,
     photo: '',
-    phone: '',
-    matialStatus: '',
-    mutual_category: '',
-    district: '',
-    sector: '',
-    cell: '',
-    village: '',
+    phone: family.phone,
+    matialStatus: family.matialStatus,
+    mutual_category: family.mutual_category,
+    district: family.district,
+    sector: family.sector,
+    cell: family.cell,
+    village: family.village,
 });
 
 const submit = () => {
-    form.post(route('sector.families.store'),
+    Inertia.post(route('sector.families.update', family.id),
         {
-            onSuccess: () => {
-                form.reset();
-            },
-            onError: (errors) => {
-                console.log('error', errors);
-                // Handle error responses or validation errors
-            },
+            _method: "put",
+            first_name : form.first_name,
+            last_name : form.last_name,
+            national_id : form.national_id,
+            dateOfBirth : form.dateOfBirth,
+            gender : form.gender,
+            photo : form.photo,
+            phone : form.phone,
+            matialStatus : form.matialStatus,
+            mutual_category : form.mutual_category,
+            district : form.district,
+            sector : form.sector,
+            cell : form.cell,
+            village : form.village,
         }
     );
 };
 
 
 
-const sectors = ref({});
+const sectors = ref(props.sectors);
+const cells = ref(props.cells);
+const villages = ref(props.villages);
 watch(() => form.district, (district) => {
     axios.get(route('sector.families.getSectors', district))
         .then((response) => {
             sectors.value = response.data;
+            form.sector = '';
+            form.cell = '';
+            form.village = '';
+
         }).catch((error) => {
             log.error('error', error);
         });
 });
-const cells = ref({});
 watch(() => form.sector, (sector) => {
     axios.get(route('sector.families.getCells', sector))
         .then((response) => {
             cells.value = response.data;
+            form.cell = '';
+            form.village = '';
+
         }).catch((error) => {
             log.error('error', error);
         });
 });
-const villages = ref({});
 watch(() => form.cell, (cell) => {
     axios.get(route('sector.families.getVillages', cell))
         .then((response) => {
             villages.value = response.data;
+            form.village = '';
         }).catch((error) => {
             log.error('error', error);
         });
@@ -108,14 +128,14 @@ watch(() => form.cell, (cell) => {
 <template>
     <SectorLayout>
 
-        <Head title="Create Family" />
+        <Head title="Edit Family" />
         <div class="main-content max-w-6xl mx-auto sm:px-6 lg:px-8">
             <!-- Page Header -->
             <div class="block justify-between page-header md:flex">
                 <div>
                     <h3
                         class="!text-defaulttextcolor dark:!text-defaulttextcolor/70 dark:text-white dark:hover:text-white text-[1.125rem] font-semibold">
-                        Create Family</h3>
+                        Edit Family</h3>
                 </div>
                 <ol class="flex items-center whitespace-nowrap min-w-0">
                     <li class="text-[0.813rem] ps-[0.5rem]">
@@ -170,7 +190,7 @@ watch(() => form.cell, (cell) => {
                                                 </div>
 
                                             </div>
-                                            <InputError class="mt-1" :message="form.errors.photo" />
+                                            <InputError class="mt-1" :message="$page.props.errors.photo" />
                                             <h6 class="font-semibold mb-4 text-[1rem]">
                                                 Profile :
                                             </h6>
@@ -180,21 +200,21 @@ watch(() => form.cell, (cell) => {
                                                     <input type="text" v-model="form.first_name"
                                                         class="form-control w-full !rounded-md" id="first_name"
                                                         placeholder="First Name">
-                                                    <InputError class="mt-1" :message="form.errors.first_name" />
+                                                    <InputError class="mt-1" :message="$page.props.errors.first_name" />
                                                 </div>
                                                 <div class="xl:col-span-6 col-span-12">
                                                     <label for="last_name" class="form-label">Last Name</label>
                                                     <input type="text" v-model="form.last_name"
                                                         class="form-control w-full !rounded-md" id="last_name"
                                                         placeholder="Last Name">
-                                                    <InputError class="mt-1" :message="form.errors.last_name" />
+                                                    <InputError class="mt-1" :message="$page.props.errors.last_name" />
                                                 </div>
                                                 <div class="xl:col-span-6 col-span-12">
-                                                    <label for="national_id" class="form-label">National ID</label>
+                                                    <label for="national_id" class="form-label">National ID </label>
                                                     <input type="number" v-model="form.national_id"
                                                         class="form-control w-full !rounded-md" id="national_id"
                                                         placeholder="National ID">
-                                                    <InputError class="mt-1" :message="form.errors.national_id" />
+                                                    <InputError class="mt-1" :message="$page.props.errors.national_id" />
                                                 </div>
                                                 <div class="xl:col-span-4 col-span-12">
                                                     <label for="dateOfBirth" class="form-label">Date of Birth</label>
@@ -202,7 +222,7 @@ watch(() => form.cell, (cell) => {
                                                         class="form-control w-full !rounded-md"
                                                         v-model="form.dateOfBirth" :max-date="new Date()"
                                                         teleport-center :enable-time-picker="false" />
-                                                    <InputError class="mt-1" :message="form.errors.dateOfBirth" />
+                                                    <InputError class="mt-1" :message="$page.props.errors.dateOfBirth" />
                                                 </div>
                                                 <div class="xl:col-span-2 col-span-12">
                                                     <label for="last-name" class="form-label">Gender</label>
@@ -219,7 +239,7 @@ watch(() => form.cell, (cell) => {
                                                             <label class="form-check-label"
                                                                 for="inlineRadio2">Female</label>
                                                         </div>
-                                                        <InputError class="mt-1" :message="form.errors.gender" />
+                                                        <InputError class="mt-1" :message="$page.props.errors.gender" />
                                                     </div>
                                                 </div>
                                                 <div class="xl:col-span-4 col-span-12">
@@ -231,7 +251,7 @@ watch(() => form.cell, (cell) => {
                                                             :key="index">Category {{ item.name }}</option>
 
                                                     </select>
-                                                    <InputError class="mt-1" :message="form.errors.mutual_category" />
+                                                    <InputError class="mt-1" :message="$page.props.errors.mutual_category" />
                                                 </div>
 
 
@@ -246,7 +266,7 @@ watch(() => form.cell, (cell) => {
                                                         <option value="widowed">Widowed</option>
 
                                                     </select>
-                                                    <InputError class="mt-1" :message="form.errors.matialStatus" />
+                                                    <InputError class="mt-1" :message="$page.props.errors.matialStatus" />
                                                 </div>
                                                 <div class="xl:col-span-4 col-span-12">
                                                     <label for="phone" class="form-label">Phone Number &nbsp; <span
@@ -254,7 +274,7 @@ watch(() => form.cell, (cell) => {
                                                     <input v-model="form.phone" type="text"
                                                         class="form-control w-full !rounded-md" id="phone"
                                                         placeholder="Phone Number">
-                                                    <InputError class="mt-1" :message="form.errors.phone" />
+                                                    <InputError class="mt-1" :message="$page.props.errors.phone" />
                                                 </div>
 
                                             </div>
@@ -271,7 +291,7 @@ watch(() => form.cell, (cell) => {
                                                             :value="item.dist_id">{{ item.district }}</option>
 
                                                     </select>
-                                                    <InputError class="mt-1" :message="form.errors.district" />
+                                                    <InputError class="mt-1" :message="$page.props.errors.district" />
                                                 </div>
                                                 <div class="xl:col-span-3 col-span-12">
                                                     <label for="sector" class="form-label">Sector</label>
@@ -282,7 +302,7 @@ watch(() => form.cell, (cell) => {
                                                             :value="item.sect_id">{{
                                                                 item.sector }}</option>
                                                     </select>
-                                                    <InputError class="mt-1" :message="form.errors.sector" />
+                                                    <InputError class="mt-1" :message="$page.props.errors.sector" />
                                                 </div>
                                                 <div class="xl:col-span-3 col-span-12">
                                                     <label for="cell" class="form-label">Cell</label>
@@ -293,7 +313,7 @@ watch(() => form.cell, (cell) => {
                                                             :value="item.cell_id">{{
                                                                 item.cell }}</option>
                                                     </select>
-                                                    <InputError class="mt-1" :message="form.errors.cell" />
+                                                    <InputError class="mt-1" :message="$page.props.errors.cell" />
                                                 </div>
                                                 <div class="xl:col-span-3 col-span-12">
                                                     <label for="village" class="form-label">Village</label>
@@ -304,7 +324,7 @@ watch(() => form.cell, (cell) => {
                                                             :value="item.vill_id">{{
                                                                 item.village }}</option>
                                                     </select>
-                                                    <InputError class="mt-1" :message="form.errors.village" />
+                                                    <InputError class="mt-1" :message="$page.props.errors.village" />
                                                 </div>
                                             </div>
                                             <div class="sm:grid grid-cols-12 gap-6">

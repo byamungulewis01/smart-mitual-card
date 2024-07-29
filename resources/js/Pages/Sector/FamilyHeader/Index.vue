@@ -1,15 +1,37 @@
 <script setup>
+import { ref } from 'vue';
 import SectorLayout from '@/Layouts/SectorLayout.vue';
-import { Head, Link } from '@inertiajs/vue3';
+import TablePagination from '@/Components/TablePagination.vue';
+import { Head, Link,useForm } from '@inertiajs/vue3';
 
 defineProps({
-    canResetPassword: {
-        type: Boolean,
+    families: {
+        type: Object,
     },
-    status: {
-        type: String,
-    },
+
 });
+
+const selectedId = ref(null);
+
+const deleteFamily = (family_id) => {
+    selectedId.value = family_id;
+};
+const destroyFamily = (family_id) => {
+    // Assuming selectedContract contains the data of the user being updated
+    const form = useForm({});
+    form.delete(route('sector.families.destroy', family_id), {
+        onSuccess: () => {
+            const closeButton = document.querySelector('.ti-btn[data-hs-overlay="#deleteModel"]');
+            if (closeButton) {
+                closeButton.click();
+            }
+        },
+        onError: (errors) => {
+            console.log('error', errors);
+            // Handle error responses or validation errors
+        },
+    });
+};
 
 
 </script>
@@ -54,10 +76,11 @@ defineProps({
                             <div class="flex flex-wrap gap-2">
                                 <div>
                                     <input class="form-control form-control-sm" type="text" placeholder="Search Here"
-                                    aria-label=".form-control-sm example">
+                                        aria-label=".form-control-sm example">
                                 </div>
-                                <Link :href="route('sector.families.create')" class="ti-btn ti-btn-primary-full !py-1 !px-2 !text-[0.75rem]">
-                                    <i class="ri-add-line  align-middle"></i>New family
+                                <Link :href="route('sector.families.create')"
+                                    class="ti-btn ti-btn-primary-full !py-1 !px-2 !text-[0.75rem]">
+                                <i class="ri-add-line  align-middle"></i>New family
                                 </Link>
 
                             </div>
@@ -81,229 +104,90 @@ defineProps({
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr class="border-t hover:bg-gray-200 dark:hover:bg-light">
-                                            <td class="!ps-6">1</td>
+                                        <tr class="border-t hover:bg-gray-200 dark:hover:bg-light"
+                                            v-for="(item, index) in families.data" :key="index">
+                                            <td class="!ps-6"> {{ (families.meta.current_page - 1) *
+                                                families.meta.per_page + index + 1 }}</td>
                                             <td>
                                                 <div class="flex items-center">
                                                     <span class="avatar avatar-xs me-2 avatar-rounded">
-                                                        <img src="/assets/images/faces/1.jpg" alt="img">
-                                                    </span>Mayor Kelly
+                                                        <img :src="'/storage/' + item.image" alt="img">
+                                                    </span>{{ item.first_name }} {{ item.last_name }}
                                                 </div>
                                             </td>
 
 
-                                            <td><strong>Male</strong></td>
-                                            <td>1188228889988277</td>
+                                            <td><strong>{{ item.gender }}</strong></td>
+                                            <td>{{ item.national_id }}</td>
                                             <td><span class="badge bg-black/10 text-black"><i
-                                                        class="bi bi-clock me-1"></i>Nov 12 1994</span></td>
+                                                        class="bi bi-clock me-1"></i>{{ item.dateOfBirth }}</span></td>
 
-                                            <td>2</td>
-                                            <td>B</td>
-                                            <td>Rubavu</td>
-                                            <td>Gisenyi</td>
+                                            <td>{{ item.members }}</td>
+                                            <td>{{ item.category }}</td>
+                                            <td>{{ item.district }}</td>
+                                            <td>{{ item.sector }}</td>
                                             <td>
-                                                <Link :href="route('sector.families.show',1)"
+                                                <Link :href="route('sector.families.show', item.id)"
                                                     class="ti-btn ti-btn-icon ti-btn-sm ti-btn-primary me-2">
-                                                    <i class="ri-eye-line"></i>
+                                                <i class="ri-eye-line"></i>
                                                 </Link>
-                                                <a aria-label="anchor" href="javascript:void(0);"
+                                                <Link :href="route('sector.families.edit', item.id)"
                                                     class="ti-btn ti-btn-icon ti-btn-sm ti-btn-info me-2">
-                                                    <i class="ri-edit-line"></i>
-                                                </a>
-                                                <a aria-label="anchor" href="javascript:void(0);"
+                                                <i class="ri-edit-line"></i>
+                                                </Link>
+                                                <a @click="deleteFamily(item.id)" aria-label="anchor"
+                                                    data-hs-overlay="#deleteModel" href="javascript:void(0);"
                                                     class="ti-btn ti-btn-icon ti-btn-sm ti-btn-danger">
                                                     <i class="ri-delete-bin-line"></i>
                                                 </a>
                                             </td>
                                         </tr>
-                                        <tr class="border-t hover:bg-gray-200 dark:hover:bg-light">
-                                            <td class="!ps-6">2</td>
-                                            <td>
-                                                <div class="flex items-center">
-                                                    <span class="avatar avatar-xs me-2 avatar-rounded">
-                                                        <img src="/assets/images/faces/2.jpg" alt="img">
-                                                    </span>Stella Conley
-                                                </div>
-                                            </td>
-
-
-                                            <td><strong>Female</strong></td>
-                                            <td>1199837772262666</td>
-                                            <td><span class="badge bg-black/10 text-black"><i
-                                                        class="bi bi-clock me-1"></i>Aug 12 2000</span></td>
-
-                                            <td>3</td>
-                                            <td>A</td>
-                                            <td>Rubavu</td>
-                                            <td>Mahoko</td>
-
-
-                                            <td>
-                                                <a aria-label="anchor" href="job-details.html"
-                                                    class="ti-btn ti-btn-icon ti-btn-sm ti-btn-primary me-2">
-                                                    <i class="ri-eye-line"></i>
-                                                </a>
-                                                <a aria-label="anchor" href="javascript:void(0);"
-                                                    class="ti-btn ti-btn-icon ti-btn-sm ti-btn-info me-2">
-                                                    <i class="ri-edit-line"></i>
-                                                </a>
-                                                <a aria-label="anchor" href="javascript:void(0);"
-                                                    class="ti-btn ti-btn-icon ti-btn-sm ti-btn-danger">
-                                                    <i class="ri-delete-bin-line"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <tr class="border-t hover:bg-gray-200 dark:hover:bg-light">
-                                            <td class="!ps-6">3</td>
-                                            <td>
-                                                <div class="flex items-center">
-                                                    <span class="avatar avatar-xs me-2 avatar-rounded">
-                                                        <img src="/assets/images/faces/3.jpg" alt="img">
-                                                    </span>Curran Hardy
-                                                </div>
-                                            </td>
-
-
-                                            <td><strong>Male</strong></td>
-                                            <td>1199822773333633</td>
-                                            <td><span class="badge bg-black/10 text-black"><i
-                                                        class="bi bi-clock me-1"></i>Nov 12 2022</span></td>
-
-                                            <td>7</td>
-                                            <td>B</td>
-                                            <td>Nyarugenge</td>
-                                            <td>Gatsata</td>
-
-
-                                            <td>
-                                                <a aria-label="anchor" href="job-details.html"
-                                                    class="ti-btn ti-btn-icon ti-btn-sm ti-btn-primary me-2">
-                                                    <i class="ri-eye-line"></i>
-                                                </a>
-                                                <a aria-label="anchor" href="javascript:void(0);"
-                                                    class="ti-btn ti-btn-icon ti-btn-sm ti-btn-info me-2">
-                                                    <i class="ri-edit-line"></i>
-                                                </a>
-                                                <a aria-label="anchor" href="javascript:void(0);"
-                                                    class="ti-btn ti-btn-icon ti-btn-sm ti-btn-danger">
-                                                    <i class="ri-delete-bin-line"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <tr class="border-t hover:bg-gray-200 dark:hover:bg-light">
-                                            <td class="!ps-6">4</td>
-                                            <td>
-                                                <div class="flex items-center">
-                                                    <span class="avatar avatar-xs me-2 avatar-rounded">
-                                                        <img src="/assets/images/faces/4.jpg" alt="img">
-                                                    </span>Nicole Patterson
-                                                </div>
-                                            </td>
-
-
-                                            <td><strong>Female</strong></td>
-                                            <td>1199009992228887</td>
-                                            <td><span class="badge bg-black/10 text-black"><i
-                                                        class="bi bi-clock me-1"></i>Nov 12 2022</span></td>
-
-                                            <td>5</td>
-                                            <td>C</td>
-                                            <td>Musanze</td>
-                                            <td>Kinigi</td>
-
-
-                                            <td>
-                                                <a aria-label="anchor" href="job-details.html"
-                                                    class="ti-btn ti-btn-icon ti-btn-sm ti-btn-primary me-2">
-                                                    <i class="ri-eye-line"></i>
-                                                </a>
-                                                <a aria-label="anchor" href="javascript:void(0);"
-                                                    class="ti-btn ti-btn-icon ti-btn-sm ti-btn-info me-2">
-                                                    <i class="ri-edit-line"></i>
-                                                </a>
-                                                <a aria-label="anchor" href="javascript:void(0);"
-                                                    class="ti-btn ti-btn-icon ti-btn-sm ti-btn-danger">
-                                                    <i class="ri-delete-bin-line"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <tr class="border-t hover:bg-gray-200 dark:hover:bg-light">
-                                            <td class="!ps-6">5</td>
-                                            <td>
-                                                <div class="flex items-center">
-                                                    <span class="avatar avatar-xs me-2 avatar-rounded">
-                                                        <img src="/assets/images/faces/5.jpg" alt="img">
-                                                    </span>Robin Roman
-                                                </div>
-                                            </td>
-
-
-                                            <td><strong>Male</strong></td>
-                                            <td>11999288877733223</td>
-                                            <td><span class="badge bg-black/10 text-black"><i
-                                                        class="bi bi-clock me-1"></i>Jan 02 1992</span></td>
-
-                                            <td>3</td>
-                                            <td>D</td>
-                                            <td>Rwamagana</td>
-                                            <td>Ntunga</td>
-
-
-                                            <td>
-                                                <a aria-label="anchor" href="job-details.html"
-                                                    class="ti-btn ti-btn-icon ti-btn-sm ti-btn-primary me-2">
-                                                    <i class="ri-eye-line"></i>
-                                                </a>
-                                                <a aria-label="anchor" href="javascript:void(0);"
-                                                    class="ti-btn ti-btn-icon ti-btn-sm ti-btn-info me-2">
-                                                    <i class="ri-edit-line"></i>
-                                                </a>
-                                                <a aria-label="anchor" href="javascript:void(0);"
-                                                    class="ti-btn ti-btn-icon ti-btn-sm ti-btn-danger">
-                                                    <i class="ri-delete-bin-line"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-
-
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-                        <div class="box-footer border-t-0">
-                            <div class="flex items-center flex-wrap overflow-auto">
-                                <div class="mb-2 sm:mb-0">
-                                    Showing <b>1</b> to <b>10</b> of <b>10</b> entries <i
-                                        class="bi bi-arrow-right ms-2 font-semibold"></i>
-                                </div>
-                                <div class="ms-auto">
-                                    <nav aria-label="Page navigation">
-                                        <ul class="ti-pagination  mb-0">
-                                            <li class="page-item disabled"><a class="page-link px-3 py-[0.375rem]"
-                                                    href="javascript:void(0);">Previous</a></li>
-                                            <li class="page-item"><a class="page-link active px-3 py-[0.375rem]"
-                                                    href="javascript:void(0);">1</a></li>
-                                            <li class="page-item"><a class="page-link px-3 py-[0.375rem]"
-                                                    href="javascript:void(0);">2</a></li>
-                                            <li class="page-item"><a class="page-link px-3 py-[0.375rem]"
-                                                    href="javascript:void(0);">3</a></li>
-                                            <li class="page-item"><a class="page-link px-3 py-[0.375rem]"
-                                                    href="javascript:void(0);">4</a></li>
-                                            <li class="page-item"><a class="page-link px-3 py-[0.375rem]"
-                                                    href="javascript:void(0);">5</a></li>
-                                            <li class="page-item"><a class="page-link px-3 py-[0.375rem]"
-                                                    href="javascript:void(0);">Next</a></li>
-                                        </ul>
-                                    </nav>
-                                </div>
-                            </div>
-                        </div>
+                        <TablePagination :links="families" />
                     </div>
                 </div>
             </div>
             <!--End::row-1 -->
 
         </div>
+
+        <div id="deleteModel" class="hs-overlay hidden ti-modal">
+            <div class="hs-overlay-open:mt-7 ti-modal-box mt-0 ease-out min-h-[calc(100%-3.5rem)] flex items-center">
+                <div class="ti-modal-content w-full">
+
+                    <div class="ti-modal-body text-center">
+                        <form @submit.prevent="destroyFamily(selectedId)">
+                            <div class="text-center px-5 pb-0">
+                                <svg class="custom-alert-icon fill-warning inline-flex"
+                                    xmlns="http://www.w3.org/2000/svg" height="5rem" viewBox="0 0 24 24" width="5rem"
+                                    fill="#000000">
+                                    <path d="M0 0h24v24H0z" fill="none"></path>
+                                    <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z">
+                                    </path>
+                                </svg>
+                                <h4 class="text-[1.85rem] !font-medium">Are you sure to remove?</h4>
+                                <p class="text-muted">This alert is warn you that action cannot be
+                                    undone.
+                                </p>
+                                <div class="mt-4">
+                                    <button type="button" data-hs-overlay="#deleteModel"
+                                        class="ti-btn !py-2 !px-3 !text-[0.75rem] !font-medium ti-btn-outline-secondary m-1">Back</button>
+
+                                    <button
+                                        class="ti-btn !py-2 !px-3 !text-[0.75rem] !font-medium ti-btn-outline-warning m-1">Continue</button>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
 
     </SectorLayout>
 </template>

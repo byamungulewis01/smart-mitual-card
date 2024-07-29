@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('national_id')->unique();
             $table->date('dateOfBirth');
             $table->enum('gender', ['male','female']);
+            $table->string('image');
+            $table->string('phone')->nullable();
             $table->timestamps();
         });
     }

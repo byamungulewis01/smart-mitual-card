@@ -29,6 +29,14 @@ Route::get('/', function () {
 
 Route::middleware('guest')->prefix('sector')->name('sector.')->group(function () {
     Route::resource('families', FamilyHeaderController::class);
+    Route::get('families/getSectors/{district}', [FamilyHeaderController::class, 'getSectors'])->name('families.getSectors');
+    Route::get('families/getCells/{sector}', [FamilyHeaderController::class, 'getCells'])->name('families.getCells');
+    Route::get('families/getVillages/{cell}', [FamilyHeaderController::class, 'getVillages'])->name('families.getVillages');
+
+
+
+
+
     Route::resource('family-members', FamilyMemberController::class);
     Route::controller(SectorSettingsController::class)->prefix('mutual-categories')->name('mutual-categories.')->group(function () {
         Route::get('/', 'index')->name('index');
