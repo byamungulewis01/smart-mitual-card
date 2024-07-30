@@ -1,6 +1,8 @@
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
 import { Inertia } from "@inertiajs/inertia";
+import { usePage } from '@inertiajs/vue3';
+
 
 
 import SectorLayout from '@/Layouts/SectorLayout.vue';
@@ -8,6 +10,8 @@ import { Head, useForm } from '@inertiajs/vue3'
 import InputError from '@/Components/InputError.vue';
 import axios from 'axios';
 
+const page = usePage();
+const shared = computed(() => page.props);
 
 const props = defineProps({
     districts: Object,
@@ -20,7 +24,7 @@ const props = defineProps({
 });
 const family = props.family;
 
-const imageUrl = ref('/storage/' + family.image); // Default image URL
+const imageUrl = ref(shared.value.asset_url + '/storage/' + family.image); // Default image URL
 const imageFile = ref(null);
 
 function onFileChange(event) {
@@ -39,7 +43,7 @@ function onFileChange(event) {
 
 function removeImage() {
     imageFile.value = null;
-    imageUrl.value = '/storage/' + family.image; // Reset to default image
+    imageUrl.value = shared.value.asset_url + '/storage/' + family.image; // Reset to default image
 }
 
 
@@ -65,19 +69,19 @@ const submit = () => {
     Inertia.post(route('sector.families.update', family.id),
         {
             _method: "put",
-            first_name : form.first_name,
-            last_name : form.last_name,
-            national_id : form.national_id,
-            dateOfBirth : form.dateOfBirth,
-            gender : form.gender,
-            photo : form.photo,
-            phone : form.phone,
-            matialStatus : form.matialStatus,
-            mutual_category : form.mutual_category,
-            district : form.district,
-            sector : form.sector,
-            cell : form.cell,
-            village : form.village,
+            first_name: form.first_name,
+            last_name: form.last_name,
+            national_id: form.national_id,
+            dateOfBirth: form.dateOfBirth,
+            gender: form.gender,
+            photo: form.photo,
+            phone: form.phone,
+            matialStatus: form.matialStatus,
+            mutual_category: form.mutual_category,
+            district: form.district,
+            sector: form.sector,
+            cell: form.cell,
+            village: form.village,
         }
     );
 };
@@ -214,7 +218,8 @@ watch(() => form.cell, (cell) => {
                                                     <input type="number" v-model="form.national_id"
                                                         class="form-control w-full !rounded-md" id="national_id"
                                                         placeholder="National ID">
-                                                    <InputError class="mt-1" :message="$page.props.errors.national_id" />
+                                                    <InputError class="mt-1"
+                                                        :message="$page.props.errors.national_id" />
                                                 </div>
                                                 <div class="xl:col-span-4 col-span-12">
                                                     <label for="dateOfBirth" class="form-label">Date of Birth</label>
@@ -222,7 +227,8 @@ watch(() => form.cell, (cell) => {
                                                         class="form-control w-full !rounded-md"
                                                         v-model="form.dateOfBirth" :max-date="new Date()"
                                                         teleport-center :enable-time-picker="false" />
-                                                    <InputError class="mt-1" :message="$page.props.errors.dateOfBirth" />
+                                                    <InputError class="mt-1"
+                                                        :message="$page.props.errors.dateOfBirth" />
                                                 </div>
                                                 <div class="xl:col-span-2 col-span-12">
                                                     <label for="last-name" class="form-label">Gender</label>
@@ -251,7 +257,8 @@ watch(() => form.cell, (cell) => {
                                                             :key="index">Category {{ item.name }}</option>
 
                                                     </select>
-                                                    <InputError class="mt-1" :message="$page.props.errors.mutual_category" />
+                                                    <InputError class="mt-1"
+                                                        :message="$page.props.errors.mutual_category" />
                                                 </div>
 
 
@@ -266,7 +273,8 @@ watch(() => form.cell, (cell) => {
                                                         <option value="widowed">Widowed</option>
 
                                                     </select>
-                                                    <InputError class="mt-1" :message="$page.props.errors.matialStatus" />
+                                                    <InputError class="mt-1"
+                                                        :message="$page.props.errors.matialStatus" />
                                                 </div>
                                                 <div class="xl:col-span-4 col-span-12">
                                                     <label for="phone" class="form-label">Phone Number &nbsp; <span

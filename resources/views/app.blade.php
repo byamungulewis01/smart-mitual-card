@@ -20,7 +20,7 @@
 
 <body class="font-sans antialiased">
     @inertia
-    <script src="/assets/libs/preline/preline.js"></script>
+    <script src="{{ asset('assets/libs/preline/preline.js') }}"></script>
 </body>
 
 </html>

@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import SectorLayout from '@/Layouts/SectorLayout.vue';
 import TablePagination from '@/Components/TablePagination.vue';
-import { Head, Link,useForm } from '@inertiajs/vue3';
+import { Head, Link, useForm } from '@inertiajs/vue3';
 
 defineProps({
     families: {
@@ -111,7 +111,8 @@ const destroyFamily = (family_id) => {
                                             <td>
                                                 <div class="flex items-center">
                                                     <span class="avatar avatar-xs me-2 avatar-rounded">
-                                                        <img :src="'/storage/' + item.image" alt="img">
+                                                        <img :src="$page.props.asset_url + '/storage/' + item.image"
+                                                            alt="img">
                                                     </span>{{ item.first_name }} {{ item.last_name }}
                                                 </div>
                                             </td>

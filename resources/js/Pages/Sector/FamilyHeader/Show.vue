@@ -46,7 +46,7 @@ const item = props.family.data;
                             <div class="sm:flex items-center p-5 border-b dark:border-defaultborder/10 border-dashed">
                                 <div>
                                     <span class="avatar avatar-xl avatar-rounded me-4">
-                                        <img :src="'/storage/' + item.image" alt="">
+                                        <img :src="$page.props.asset_url + '/storage/' + item.image" alt="">
                                     </span>
                                 </div>
                                 <div class="flex-grow main-profile-info">
@@ -165,7 +165,7 @@ const item = props.family.data;
                                 </div>
                                 <div class="flex flex-wrap gap-2">
 
-                                    <Link :href="route('sector.family-members.create')"
+                                    <Link :href="route('sector.family-members.create', { family: item.id })"
                                         class="ti-btn ti-btn-primary-full !py-1 !px-2 !text-[0.75rem]">
                                     <i class="ri-add-line  align-middle"></i>New member
                                     </Link>
@@ -180,7 +180,8 @@ const item = props.family.data;
                                             <div class="box-body p-6">
                                                 <div class="text-center">
                                                     <span class="avatar avatar-xl avatar-rounded">
-                                                        <img src="/assets/images/faces/2.jpg" alt="">
+                                                        <img :src="$page.props.asset_url + '/assets/images/faces/2.jpg'"
+                                                            alt="">
                                                     </span>
                                                     <div class="mt-2">
                                                         <p class="mb-0 font-semibold">Samantha May</p>
@@ -219,7 +220,8 @@ const item = props.family.data;
                                             <div class="box-body p-6">
                                                 <div class="text-center">
                                                     <span class="avatar avatar-xl avatar-rounded">
-                                                        <img src="/assets/images/faces/15.jpg" alt="">
+                                                        <img :src="$page.props.asset_url + '/assets/images/faces/15.jpg'"
+                                                            alt="">
                                                     </span>
                                                     <div class="mt-2">
                                                         <p class="mb-0 font-semibold">Andrew Garfield</p>
@@ -258,7 +260,8 @@ const item = props.family.data;
                                             <div class="box-body p-6">
                                                 <div class="text-center">
                                                     <span class="avatar avatar-xl avatar-rounded">
-                                                        <img src="/assets/images/faces/5.jpg" alt="">
+                                                        <img :src="$page.props.asset_url + '/assets/images/faces/5.jpg'"
+                                                            alt="">
                                                     </span>
                                                     <div class="mt-2">
                                                         <p class="mb-0 font-semibold">Jessica Cashew</p>

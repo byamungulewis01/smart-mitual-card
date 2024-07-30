@@ -1,5 +1,6 @@
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, computed, watch } from 'vue';
+import { usePage } from '@inertiajs/vue3';
 
 import SectorLayout from '@/Layouts/SectorLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3'
@@ -15,7 +16,10 @@ defineProps({
 
 });
 
-const imageUrl = ref('/assets/images/faces/9.jpg'); // Default image URL
+const page = usePage();
+const shared = computed(() => page.props);
+
+const imageUrl = ref(shared.value.asset_url + '/assets/images/faces/21.jpg'); // Default image URL
 const imageFile = ref(null);
 
 function onFileChange(event) {
@@ -34,7 +38,7 @@ function onFileChange(event) {
 
 function removeImage() {
     imageFile.value = null;
-    imageUrl.value = '/assets/images/faces/9.jpg'; // Reset to default image
+    imageUrl.value = shared.value.asset_url + '/assets/images/faces/21.jpg'; // Reset to default image
 }
 
 

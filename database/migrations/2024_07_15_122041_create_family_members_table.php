@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('family_header_id')->constrained()->cascadeOnDelete();
             $table->string('first_name');
             $table->string('last_name');
-            $table->string('national_id')->unique();
+            $table->string('national_id')->nullable()->unique();
             $table->date('dateOfBirth');
             $table->enum('gender', ['male','female']);
             $table->string('image');

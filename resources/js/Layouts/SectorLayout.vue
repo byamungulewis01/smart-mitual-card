@@ -15,7 +15,7 @@ import { Link } from '@inertiajs/vue3';
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
                                 <Link :href="route('dashboard')">
-                                <img src="/assets/images/miniHeal.svg" class="block h-9 w-auto fill-current text-gray-800" />
+                                <img :src="$page.props.asset_url + '/assets/images/miniHeal.svg'" class="block h-9 w-auto fill-current text-gray-800" />
                                 </Link>
                             </div>
 

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Inertia\Inertia;
 use App\Models\FamilyMember;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class FamilyMemberController extends Controller
 {
@@ -22,7 +22,7 @@ class FamilyMemberController extends Controller
     public function create()
     {
         //
-        return Inertia::render('Sector/FamilyMember/Create');
+        return Inertia::render('Sector/FamilyMember/Create', ['family' => request('family')]);
     }
 
     /**
@@ -30,7 +30,29 @@ class FamilyMemberController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'first_name' => 'required|string|min:3',
+            'last_name' => 'required|string|min:3',
+            'phone' => 'nullable|numeric|digits:10',
+            'national_id' => 'nullable|numeric|digits:16',
+            'gender' => 'required',
+            'photo' => 'required',
+            'matialStatus' => 'required',
+            'dateOfBirth' => 'required',
+            'family_header_id' => 'required',
+        ]);
+        try {
+            if ($request->hasFile('photo')) {
+                $photo = $request->file('photo')->store('profile', 'public');
+                $request->merge(['image' => $photo]);
+            }
+            FamilyMember::create($request->all());
+            return to_route('sector.families.show', $request->family_header_id)->with('message', 'Member registed successfully');
+        } catch (\Throwable $th) {
+            //throw $th;
+            // dd($th->getMessage());
+            return back()->with('warning', 'Something went wrong, please try again');
+        }
     }
 
     /**
