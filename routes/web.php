@@ -44,7 +44,7 @@ Route::middleware('guest')->prefix('sector')->name('sector.')->group(function ()
 });
 Route::middleware('guest')->prefix('irembo')->name('irembo.')->group(function () {
     Route::get('payment-test', [IremboController::class,'test_payment']);
-    Route::get('payment-callback', [IremboController::class,'callback'])->name('payment.callback');
+    Route::get('payment-callback', [IremboController::class,'callback'])->name('callback');
     Route::post('payment-test', [IremboController::class,'test_payment_store'])->name('test_payment_store');
 });
 
