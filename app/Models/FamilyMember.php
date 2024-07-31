@@ -17,6 +17,7 @@ class FamilyMember extends Model
         'dateOfBirth',
         'gender',
         'image',
+        'matialStatus',
         'phone',
     ];
 }

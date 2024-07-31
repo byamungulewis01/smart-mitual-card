@@ -1,25 +1,22 @@
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed } from 'vue';
+import { Inertia } from "@inertiajs/inertia";
 import { usePage } from '@inertiajs/vue3';
 
 import SectorLayout from '@/Layouts/SectorLayout.vue';
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head, useForm } from '@inertiajs/vue3'
 import InputError from '@/Components/InputError.vue';
-import axios from 'axios';
-
-defineProps({
-    districts: {
-        type: Object,
-        required: true
-    },
-    categories: Object,
-
-});
 
 const page = usePage();
 const shared = computed(() => page.props);
 
-const imageUrl = ref(shared.value.asset_url + '/assets/images/faces/21.jpg'); // Default image URL
+const props = defineProps({
+    family_member: Object,
+
+});
+const member = props.family_member;
+
+const imageUrl = ref(shared.value.asset_url + '/storage/' + member.image); // Default image URL
 const imageFile = ref(null);
 
 function onFileChange(event) {
@@ -38,73 +35,38 @@ function onFileChange(event) {
 
 function removeImage() {
     imageFile.value = null;
-    imageUrl.value = shared.value.asset_url + '/assets/images/faces/21.jpg'; // Reset to default image
+    imageUrl.value = shared.value.asset_url + '/storage/' + member.image; // Reset to default image
 }
 
 
 
 
 const form = useForm({
-    first_name: '',
-    last_name: '',
-    national_id: '',
-    dateOfBirth: '',
-    gender: '',
+    first_name: member.first_name,
+    last_name: member.last_name,
+    national_id: member.national_id,
+    dateOfBirth: member.dateOfBirth,
+    gender: member.gender,
     photo: '',
-    phone: '',
-    matialStatus: '',
-    mutual_category: '',
-    district: '',
-    sector: '',
-    cell: '',
-    village: '',
+    phone: member.phone,
+    matialStatus: member.matialStatus,
 });
 
 const submit = () => {
-    form.post(route('sector.families.store'),
+    Inertia.post(route('sector.family-members.update', member.id),
         {
-            onSuccess: () => {
-                form.reset();
-            },
-            onError: (errors) => {
-                console.log('error', errors);
-                // Handle error responses or validation errors
-            },
+            _method: "put",
+            first_name: form.first_name,
+            last_name: form.last_name,
+            national_id: form.national_id,
+            dateOfBirth: form.dateOfBirth,
+            gender: form.gender,
+            photo: form.photo,
+            phone: form.phone,
+            matialStatus: form.matialStatus,
         }
     );
 };
-
-
-
-const sectors = ref({});
-watch(() => form.district, (district) => {
-    axios.get(route('sector.families.getSectors', district))
-        .then((response) => {
-            sectors.value = response.data;
-        }).catch((error) => {
-            log.error('error', error);
-        });
-});
-const cells = ref({});
-watch(() => form.sector, (sector) => {
-    axios.get(route('sector.families.getCells', sector))
-        .then((response) => {
-            cells.value = response.data;
-        }).catch((error) => {
-            log.error('error', error);
-        });
-});
-const villages = ref({});
-watch(() => form.cell, (cell) => {
-    axios.get(route('sector.families.getVillages', cell))
-        .then((response) => {
-            villages.value = response.data;
-        }).catch((error) => {
-            log.error('error', error);
-        });
-});
-
-
 
 
 </script>
@@ -112,27 +74,27 @@ watch(() => form.cell, (cell) => {
 <template>
     <SectorLayout>
 
-        <Head title="Create Family" />
+        <Head title="Edit Member" />
         <div class="main-content max-w-6xl mx-auto sm:px-6 lg:px-8">
             <!-- Page Header -->
             <div class="block justify-between page-header md:flex">
                 <div>
                     <h3
                         class="!text-defaulttextcolor dark:!text-defaulttextcolor/70 dark:text-white dark:hover:text-white text-[1.125rem] font-semibold">
-                        Create Family</h3>
+                        Edit Member</h3>
                 </div>
                 <ol class="flex items-center whitespace-nowrap min-w-0">
                     <li class="text-[0.813rem] ps-[0.5rem]">
                         <a class="flex items-center text-primary hover:text-primary dark:text-primary truncate"
                             href="javascript:void(0);">
-                            Family
+                            Member
                             <i
                                 class="ti ti-chevrons-right flex-shrink-0 text-[#8c9097] dark:text-white/50 px-[0.5rem] overflow-visible rtl:rotate-180"></i>
                         </a>
                     </li>
                     <li class="text-[0.813rem] text-defaulttextcolor font-semibold hover:text-primary dark:text-[#8c9097] dark:text-white/50 "
                         aria-current="page">
-                        Create Family
+                        Edit Member
                     </li>
                 </ol>
             </div>
@@ -174,7 +136,7 @@ watch(() => form.cell, (cell) => {
                                                 </div>
 
                                             </div>
-                                            <InputError class="mt-1" :message="form.errors.photo" />
+                                            <InputError class="mt-1" :message="$page.props.errors.photo" />
                                             <h6 class="font-semibold mb-4 text-[1rem]">
                                                 Profile :
                                             </h6>
@@ -184,21 +146,22 @@ watch(() => form.cell, (cell) => {
                                                     <input type="text" v-model="form.first_name"
                                                         class="form-control w-full !rounded-md" id="first_name"
                                                         placeholder="First Name">
-                                                    <InputError class="mt-1" :message="form.errors.first_name" />
+                                                    <InputError class="mt-1" :message="$page.props.errors.first_name" />
                                                 </div>
                                                 <div class="xl:col-span-6 col-span-12">
                                                     <label for="last_name" class="form-label">Last Name</label>
                                                     <input type="text" v-model="form.last_name"
                                                         class="form-control w-full !rounded-md" id="last_name"
                                                         placeholder="Last Name">
-                                                    <InputError class="mt-1" :message="form.errors.last_name" />
+                                                    <InputError class="mt-1" :message="$page.props.errors.last_name" />
                                                 </div>
                                                 <div class="xl:col-span-6 col-span-12">
-                                                    <label for="national_id" class="form-label">National ID</label>
+                                                    <label for="national_id" class="form-label">National ID </label>
                                                     <input type="number" v-model="form.national_id"
                                                         class="form-control w-full !rounded-md" id="national_id"
                                                         placeholder="National ID">
-                                                    <InputError class="mt-1" :message="form.errors.national_id" />
+                                                    <InputError class="mt-1"
+                                                        :message="$page.props.errors.national_id" />
                                                 </div>
                                                 <div class="xl:col-span-4 col-span-12">
                                                     <label for="dateOfBirth" class="form-label">Date of Birth</label>
@@ -206,7 +169,8 @@ watch(() => form.cell, (cell) => {
                                                         class="form-control w-full !rounded-md"
                                                         v-model="form.dateOfBirth" :max-date="new Date()"
                                                         teleport-center :enable-time-picker="false" />
-                                                    <InputError class="mt-1" :message="form.errors.dateOfBirth" />
+                                                    <InputError class="mt-1"
+                                                        :message="$page.props.errors.dateOfBirth" />
                                                 </div>
                                                 <div class="xl:col-span-2 col-span-12">
                                                     <label for="last-name" class="form-label">Gender</label>
@@ -223,23 +187,11 @@ watch(() => form.cell, (cell) => {
                                                             <label class="form-check-label"
                                                                 for="inlineRadio2">Female</label>
                                                         </div>
-                                                        <InputError class="mt-1" :message="form.errors.gender" />
+                                                        <InputError class="mt-1" :message="$page.props.errors.gender" />
                                                     </div>
                                                 </div>
-                                                <div class="xl:col-span-4 col-span-12">
-                                                    <label for="mutual_category " class="form-label">Category</label>
-                                                    <select v-model="form.mutual_category"
-                                                        class="ti-form-select rounded-sm !py-2 !px-3">
-                                                        <option selected="" value=""> -- select -- </option>
-                                                        <option v-for="(item, index) in categories" :value="item.id"
-                                                            :key="index">Category {{ item.name }}</option>
 
-                                                    </select>
-                                                    <InputError class="mt-1" :message="form.errors.mutual_category" />
-                                                </div>
-
-
-                                                <div class="xl:col-span-4 col-span-12">
+                                                <div class="xl:col-span-6 col-span-12">
                                                     <label for="matialStatus" class="form-label">Matial Status</label>
                                                     <select v-model="form.matialStatus"
                                                         class="ti-form-select rounded-sm !py-2 !px-3">
@@ -250,71 +202,24 @@ watch(() => form.cell, (cell) => {
                                                         <option value="widowed">Widowed</option>
 
                                                     </select>
-                                                    <InputError class="mt-1" :message="form.errors.matialStatus" />
+                                                    <InputError class="mt-1"
+                                                        :message="$page.props.errors.matialStatus" />
                                                 </div>
-                                                <div class="xl:col-span-4 col-span-12">
+                                                <div class="xl:col-span-6 col-span-12">
                                                     <label for="phone" class="form-label">Phone Number &nbsp; <span
                                                             class="text-black-100"> (Optional)</span></label>
                                                     <input v-model="form.phone" type="text"
                                                         class="form-control w-full !rounded-md" id="phone"
                                                         placeholder="Phone Number">
-                                                    <InputError class="mt-1" :message="form.errors.phone" />
+                                                    <InputError class="mt-1" :message="$page.props.errors.phone" />
                                                 </div>
 
                                             </div>
-                                            <h6 class="font-semibold mb-4 text-[1rem]">
-                                                Address information :
-                                            </h6>
-                                            <div class="sm:grid grid-cols-12 gap-6 mb-6">
-                                                <div class="xl:col-span-3 col-span-12">
-                                                    <label for="district" class="form-label">District</label>
-                                                    <select v-model="form.district"
-                                                        class="ti-form-select rounded-sm !py-2 !px-3">
-                                                        <option selected="" value=""> -- select -- </option>
-                                                        <option v-for="(item, index) in districts" :key="index"
-                                                            :value="item.dist_id">{{ item.district }}</option>
 
-                                                    </select>
-                                                    <InputError class="mt-1" :message="form.errors.district" />
-                                                </div>
-                                                <div class="xl:col-span-3 col-span-12">
-                                                    <label for="sector" class="form-label">Sector</label>
-                                                    <select v-model="form.sector"
-                                                        class="ti-form-select rounded-sm !py-2 !px-3">
-                                                        <option selected="" value=""> -- select -- </option>
-                                                        <option v-for="item in sectors" :key="item.sect_id"
-                                                            :value="item.sect_id">{{
-                                                                item.sector }}</option>
-                                                    </select>
-                                                    <InputError class="mt-1" :message="form.errors.sector" />
-                                                </div>
-                                                <div class="xl:col-span-3 col-span-12">
-                                                    <label for="cell" class="form-label">Cell</label>
-                                                    <select v-model="form.cell"
-                                                        class="ti-form-select rounded-sm !py-2 !px-3">
-                                                        <option selected="" value=""> -- select -- </option>
-                                                        <option v-for="item in cells" :key="item.cell_id"
-                                                            :value="item.cell_id">{{
-                                                                item.cell }}</option>
-                                                    </select>
-                                                    <InputError class="mt-1" :message="form.errors.cell" />
-                                                </div>
-                                                <div class="xl:col-span-3 col-span-12">
-                                                    <label for="village" class="form-label">Village</label>
-                                                    <select v-model="form.village"
-                                                        class="ti-form-select rounded-sm !py-2 !px-3">
-                                                        <option selected="" value=""> -- select -- </option>
-                                                        <option v-for="item in villages" :key="item.vill_id"
-                                                            :value="item.vill_id">{{
-                                                                item.village }}</option>
-                                                    </select>
-                                                    <InputError class="mt-1" :message="form.errors.village" />
-                                                </div>
-                                            </div>
                                             <div class="sm:grid grid-cols-12 gap-6">
                                                 <div class="xl:col-span-12 col-span-12">
                                                     <button
-                                                        class="ti-btn ti-btn-primary btn-wave ms-auto float-right">Submit</button>
+                                                        class="ti-btn ti-btn-primary btn-wave ms-auto float-right">Save changes</button>
                                                 </div>
                                             </div>
                                         </div>

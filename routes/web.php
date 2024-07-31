@@ -1,14 +1,15 @@
 <?php
 
-use Inertia\Inertia;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Foundation\Application;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FamilyHeaderController;
 use App\Http\Controllers\FamilyMemberController;
+use App\Http\Controllers\IremboController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchFamilyController;
 use App\Http\Controllers\SectorSettingsController;
+use App\Http\Controllers\UserController;
+use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -33,14 +34,18 @@ Route::middleware('guest')->prefix('sector')->name('sector.')->group(function ()
     Route::get('families/getCells/{sector}', [FamilyHeaderController::class, 'getCells'])->name('families.getCells');
     Route::get('families/getVillages/{cell}', [FamilyHeaderController::class, 'getVillages'])->name('families.getVillages');
 
-
-
-
-
     Route::resource('family-members', FamilyMemberController::class);
     Route::controller(SectorSettingsController::class)->prefix('mutual-categories')->name('mutual-categories.')->group(function () {
         Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store');
+        Route::put('/', 'update')->name('update');
+        Route::delete('/', 'destroy')->name('destroy');
     });
+});
+Route::middleware('guest')->prefix('irembo')->name('irembo.')->group(function () {
+    Route::get('payment-test', [IremboController::class,'test_payment']);
+    Route::get('payment-callback', [IremboController::class,'callback'])->name('payment.callback');
+    Route::post('payment-test', [IremboController::class,'test_payment_store'])->name('test_payment_store');
 });
 
 Route::middleware('auth')->group(function () {

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('national_id')->nullable()->unique();
             $table->date('dateOfBirth');
             $table->enum('gender', ['male','female']);
+            $table->enum('matialStatus', ['single','married','divorced','widowed']);
             $table->string('image');
             $table->string('phone')->nullable();
             $table->timestamps();

@@ -1,7 +1,32 @@
 <script setup>
+import InputError from '@/Components/InputError.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SectorLayout from '@/Layouts/SectorLayout.vue';
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, useForm } from '@inertiajs/vue3';
 
+const form = useForm({
+    name: '',
+    amount: '',
+});
+const submit = () => {
+    form.post(route('sector.mutual-categories.store'),
+        {
+            onSuccess: () => {
+                form.reset();
+                const closeButton = document.querySelector('.hs-dropdown-toggle[data-hs-overlay="#addModel"]');
+                if (closeButton) {
+                    closeButton.click();
+                }
+
+            },
+            onError: (errors) => {
+                console.log('error', errors);
+                // Handle error responses or validation errors
+            },
+        }
+    );
+};
+defineProps({ categories: Object });
 </script>
 
 <template>
@@ -42,9 +67,60 @@ import { Head, Link } from '@inertiajs/vue3';
                                 Mitual Categories
                             </div>
 
-                                <Link :href="route('sector.families.create')" class="ti-btn ti-btn-primary-full !py-1 !px-2 !text-[0.75rem]">
-                                    <i class="ri-add-line  align-middle"></i>New
-                                </Link>
+                            <button data-hs-overlay="#addModel"
+                                class="ti-btn ti-btn-primary-full !py-1 !px-2 !text-[0.75rem]">
+                                <i class="ri-add-line  align-middle"></i>New
+                            </button>
+
+                            <div id="addModel" class="hs-overlay hidden ti-modal">
+                                <div
+                                    class="hs-overlay-open:mt-7 ti-modal-box mt-0 ease-out md:!max-w-sm md:w-full m-3 md:mx-auto">
+                                    <div class="ti-modal-content">
+                                        <div class="ti-modal-header">
+                                            <h6 class="modal-title text-[1rem] font-semibold">New Category</h6>
+                                            <button type="button"
+                                                class="ti-btn !text-[1rem] !font-semibold !text-defaulttextcolor"
+                                                data-hs-overlay="#addModel">
+                                                <span class="sr-only">Close</span>
+                                                <i class="ri-close-line"></i>
+                                            </button>
+                                        </div>
+                                        <form @submit.prevent="submit">
+                                            <div class="ti-modal-body">
+
+                                                <div class="grid grid-cols-12 gap-4 px-3">
+
+                                                    <div class="xl:col-span-12 col-span-12">
+                                                        <label for="name" class="form-label">Name</label>
+                                                        <input type="text" v-model="form.name"
+                                                            class="form-control w-full !rounded-md" id="name"
+                                                            placeholder="Category Name">
+                                                        <InputError class="mt-2" :message="form.errors.name" />
+
+                                                    </div>
+                                                    <div class="xl:col-span-12 col-span-12">
+                                                        <label for="amount" class="form-label">Amount</label>
+                                                        <input type="number" v-model="form.amount"
+                                                            class="form-control w-full !rounded-md" id="amount"
+                                                            placeholder="Amount">
+                                                        <InputError class="mt-2" :message="form.errors.amount" />
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="ti-modal-footer">
+                                                <button type="button"
+                                                    class="hs-dropdown-toggle ti-btn  ti-btn-secondary-full align-middle"
+                                                    data-hs-overlay="#addModel">
+                                                    Close
+                                                </button>
+                                                <PrimaryButton :class="{ 'opacity-25': form.processing }"
+                                                    :disabled="form.processing">Submit</PrimaryButton>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
 
                         </div>
                         <div class="box-body !p-0">
@@ -59,10 +135,10 @@ import { Head, Link } from '@inertiajs/vue3';
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr class="border-t hover:bg-gray-200 dark:hover:bg-light">
+                                        <tr v-for="(item, index) in categories" :key="index" class="border-t hover:bg-gray-200 dark:hover:bg-light">
                                             <td class="!ps-6">1</td>
-                                            <td>A</td>
-                                            <td>2200</td>
+                                            <td>{{ item.name }}</td>
+                                            <td>{{ item.amount.toLocaleString() }}</td>
                                             <td>
                                                 <a aria-label="anchor" href="javascript:void(0);"
                                                     class="ti-btn ti-btn-icon ti-btn-sm ti-btn-info me-2">
@@ -75,54 +151,7 @@ import { Head, Link } from '@inertiajs/vue3';
                                             </td>
 
                                         </tr>
-                                        <tr class="border-t hover:bg-gray-200 dark:hover:bg-light">
-                                            <td class="!ps-6">2</td>
-                                            <td>B</td>
-                                            <td>2200</td>
-                                            <td>
-                                                <a aria-label="anchor" href="javascript:void(0);"
-                                                    class="ti-btn ti-btn-icon ti-btn-sm ti-btn-info me-2">
-                                                    <i class="ri-edit-line"></i>
-                                                </a>
-                                                <a aria-label="anchor" href="javascript:void(0);"
-                                                    class="ti-btn ti-btn-icon ti-btn-sm ti-btn-danger">
-                                                    <i class="ri-delete-bin-line"></i>
-                                                </a>
-                                            </td>
 
-                                        </tr>
-                                        <tr class="border-t hover:bg-gray-200 dark:hover:bg-light">
-                                            <td class="!ps-6">3</td>
-                                            <td>C</td>
-                                            <td>2200</td>
-                                            <td>
-                                                <a aria-label="anchor" href="javascript:void(0);"
-                                                    class="ti-btn ti-btn-icon ti-btn-sm ti-btn-info me-2">
-                                                    <i class="ri-edit-line"></i>
-                                                </a>
-                                                <a aria-label="anchor" href="javascript:void(0);"
-                                                    class="ti-btn ti-btn-icon ti-btn-sm ti-btn-danger">
-                                                    <i class="ri-delete-bin-line"></i>
-                                                </a>
-                                            </td>
-
-                                        </tr>
-                                        <tr class="border-t hover:bg-gray-200 dark:hover:bg-light">
-                                            <td class="!ps-6">4</td>
-                                            <td>D</td>
-                                            <td>2200</td>
-                                            <td>
-                                                <a aria-label="anchor" href="javascript:void(0);"
-                                                    class="ti-btn ti-btn-icon ti-btn-sm ti-btn-info me-2">
-                                                    <i class="ri-edit-line"></i>
-                                                </a>
-                                                <a aria-label="anchor" href="javascript:void(0);"
-                                                    class="ti-btn ti-btn-icon ti-btn-sm ti-btn-danger">
-                                                    <i class="ri-delete-bin-line"></i>
-                                                </a>
-                                            </td>
-
-                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -140,6 +169,9 @@ import { Head, Link } from '@inertiajs/vue3';
 
 
         </div>
+
+
+
 
     </SectorLayout>
 </template>

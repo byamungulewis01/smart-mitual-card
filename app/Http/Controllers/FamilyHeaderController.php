@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\FamilyHeaderResource;
+use App\Http\Resources\FamilyMemberResource;
 use App\Models\FamilyHeader;
+use App\Models\FamilyMember;
 use App\Models\MutualCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -91,7 +93,10 @@ class FamilyHeaderController extends Controller
     public function show(FamilyHeader $family)
     {
         $family = new FamilyHeaderResource($family);
-        return Inertia::render('Sector/FamilyHeader/Show',compact('family'));
+        $collection = FamilyMember::where('family_header_id', $family->id)->get();
+        $family_members = FamilyMemberResource::collection($collection);
+
+        return Inertia::render('Sector/FamilyHeader/Show', compact('family', 'family_members'));
     }
 
     /**
