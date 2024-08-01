@@ -62,7 +62,7 @@ class FamilyHeaderController extends Controller
         $request->validate([
             'first_name' => 'required|string|min:3',
             'last_name' => 'required|string|min:3',
-            'phone' => 'nullable|numeric|digits:10',
+            'phone' => 'nullable',
             'national_id' => 'required|numeric|digits:16',
             'gender' => 'required',
             'photo' => 'required',
@@ -125,7 +125,7 @@ class FamilyHeaderController extends Controller
         $request->validate([
             'first_name' => 'required|string|min:3',
             'last_name' => 'required|string|min:3',
-            'phone' => 'nullable|numeric|digits:10',
+            'phone' => 'nullable',
             'national_id' => 'required|numeric|digits:16',
             'gender' => 'required',
             'photo' => 'nullable',

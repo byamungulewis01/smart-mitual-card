@@ -4,6 +4,7 @@ import { Link } from '@inertiajs/vue3';
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 import { usePage } from '@inertiajs/vue3';
+import { computed, watch } from 'vue';
 
 const page = usePage();
 

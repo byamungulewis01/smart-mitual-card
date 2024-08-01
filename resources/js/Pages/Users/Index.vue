@@ -1,7 +1,8 @@
 <script setup>
 import TablePagination from '@/Components/TablePagination.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, useForm } from '@inertiajs/vue3';
+import { ref } from 'vue';
 
 defineProps({
     users: Object
@@ -16,7 +17,27 @@ const status = {
         class: "badge !rounded-full bg-danger/10 text-danger"
     },
 };
+const selectedId = ref(null);
 
+const deleteUser = (user_id) => {
+    selectedId.value = user_id;
+};
+const destroyUser = (user_id) => {
+    // Assuming selectedContract contains the data of the user being updated
+    const form = useForm({});
+    form.delete(route('users.destroy', user_id), {
+        onSuccess: () => {
+            const closeButton = document.querySelector('.ti-btn[data-hs-overlay="#deleteModel"]');
+            if (closeButton) {
+                closeButton.click();
+            }
+        },
+        onError: (errors) => {
+            console.log('error', errors);
+            // Handle error responses or validation errors
+        },
+    });
+};
 </script>
 
 <template>
@@ -85,7 +106,8 @@ const status = {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="(user, index) in users.data" :key="index" class="border-t hover:bg-gray-200 dark:hover:bg-light">
+                                        <tr v-for="(user, index) in users.data" :key="index"
+                                            class="border-t hover:bg-gray-200 dark:hover:bg-light">
                                             <td class="!ps-6">{{ (users.current_page - 1) *
                                                 users.per_page + index + 1 }}</td>
 
@@ -95,19 +117,20 @@ const status = {
                                             <td>{{ user.role }}</td>
                                             <!-- <td><span class="badge bg-success/10 text-success">Active</span></td> -->
                                             <td><span :class="status[user.status].class">{{ status[user.status].title
-                                                }}</span>
-                                        </td>
+                                                    }}</span>
+                                            </td>
                                             <td><i class="bi bi-clock me-1"></i>{{ new
-                                            Date(user.created_at).toLocaleDateString('en-US', {
-                                                month: 'short', day:
-                                                    '2-digit', year: 'numeric'
-                                            }) }}</td>
+                                                Date(user.created_at).toLocaleDateString('en-US', {
+                                                    month: 'short', day:
+                                                        '2-digit', year: 'numeric'
+                                                }) }}</td>
                                             <td>
-                                                <a aria-label="anchor" href="javascript:void(0);"
+                                                <Link :href="route('users.edit', user)"
                                                     class="ti-btn ti-btn-icon ti-btn-sm ti-btn-info me-2">
-                                                    <i class="ri-edit-line"></i>
-                                                </a>
-                                                <a aria-label="anchor" href="javascript:void(0);"
+                                                <i class="ri-edit-line"></i>
+                                                </Link>
+                                                <a @click="deleteUser(user.id)" aria-label="anchor"
+                                                    data-hs-overlay="#deleteModel" href="javascript:void(0);"
                                                     class="ti-btn ti-btn-icon ti-btn-sm ti-btn-danger">
                                                     <i class="ri-delete-bin-line"></i>
                                                 </a>
@@ -127,6 +150,41 @@ const status = {
             <!--End::row-1 -->
 
         </div>
+
+        <div id="deleteModel" class="hs-overlay hidden ti-modal">
+            <div class="hs-overlay-open:mt-7 ti-modal-box mt-0 ease-out min-h-[calc(100%-3.5rem)] flex items-center">
+                <div class="ti-modal-content w-full">
+
+                    <div class="ti-modal-body text-center">
+                        <form @submit.prevent="destroyUser(selectedId)">
+                            <div class="text-center px-5 pb-0">
+                                <svg class="custom-alert-icon fill-warning inline-flex"
+                                    xmlns="http://www.w3.org/2000/svg" height="5rem" viewBox="0 0 24 24" width="5rem"
+                                    fill="#000000">
+                                    <path d="M0 0h24v24H0z" fill="none"></path>
+                                    <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z">
+                                    </path>
+                                </svg>
+                                <h4 class="text-[1.85rem] !font-medium">Are you sure to remove?</h4>
+                                <p class="text-muted">This alert is warn you that action cannot be
+                                    undone.
+                                </p>
+                                <div class="mt-4">
+                                    <button type="button" data-hs-overlay="#deleteModel"
+                                        class="ti-btn !py-2 !px-3 !text-[0.75rem] !font-medium ti-btn-outline-secondary m-1">Back</button>
+
+                                    <button
+                                        class="ti-btn !py-2 !px-3 !text-[0.75rem] !font-medium ti-btn-outline-warning m-1">Continue</button>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
 
     </AuthenticatedLayout>
 </template>

@@ -147,7 +147,7 @@ const destroyFamily = (family_id) => {
                                 </table>
                             </div>
                         </div>
-                        <TablePagination :links="families" />
+                        <TablePagination :links="families.meta" />
                     </div>
                 </div>
             </div>

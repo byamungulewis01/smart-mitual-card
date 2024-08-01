@@ -19,6 +19,9 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => 'BYAMUNGU Lewis',
             'email' => 'byamungulewis@gmail.com',
+            'phone' => '0785436135',
+            'role' => 'Administrator',
+            'status' => 'active',
             'password' => 'byamungu',
         ]);
         MutualCategory::create([

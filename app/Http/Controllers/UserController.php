@@ -64,7 +64,6 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        //
         return Inertia::render('Users/Edit', ['user' => $user]);
 
     }
@@ -84,7 +83,7 @@ class UserController extends Controller
 
         try {
             $user->update($request->all());
-            return back()->with('message', 'User updated successfully');
+            return to_route('users.index')->with('message', 'User updated successfully');
         } catch (\Throwable $th) {
             //throw $th;
             return back()->with('warning', 'Something went wrong, please try again');

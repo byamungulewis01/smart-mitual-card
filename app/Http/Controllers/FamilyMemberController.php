@@ -34,7 +34,7 @@ class FamilyMemberController extends Controller
         $request->validate([
             'first_name' => 'required|string|min:3',
             'last_name' => 'required|string|min:3',
-            'phone' => 'nullable|numeric|digits:10',
+            'phone' => 'nullable',
             'national_id' => 'nullable|numeric|digits:16',
             'gender' => 'required',
             'photo' => 'required',
@@ -80,7 +80,7 @@ class FamilyMemberController extends Controller
         $request->validate([
             'first_name' => 'required|string|min:3',
             'last_name' => 'required|string|min:3',
-            'phone' => 'nullable|numeric|digits:10',
+            'phone' => 'nullable',
             'national_id' => 'nullable|numeric|digits:16',
             'gender' => 'required',
             'photo' => 'nullable',
