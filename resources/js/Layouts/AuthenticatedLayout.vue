@@ -38,6 +38,12 @@ watch(props, (newProps) => {
   }
 }, { immediate: true });
 
+
+const isActive = (routes) => computed(() => {
+  const currentRoute = props.value?.currentRouteName || '';
+  return routes.includes(currentRoute);
+});
+
 const showingNavigationDropdown = ref(false);
 </script>
 
@@ -63,7 +69,7 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
                                 </NavLink>
-                                <NavLink :href="route('users.index')" :active="route().current('users.index')">
+                                <NavLink :href="route('users.index')" :active="route().current('users.index') || route().current('users.create') || route().current('users.edit')">
                                     Users
                                 </NavLink>
                                 <NavLink :href="route('manualSearch')" :active="route().current('manualSearch')">

@@ -1,6 +1,29 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
+import { Head, useForm } from '@inertiajs/vue3';
+import InputError from '@/Components/InputError.vue';
+
+const form = useForm({
+    name: '',
+    email: '',
+    phone: '',
+    role: '',
+    status: '',
+});
+
+const submit = () => {
+    form.post(route('users.store'),
+        {
+            onSuccess: () => {
+                form.reset();
+            },
+            onError: (errors) => {
+                console.log('error', errors);
+                // Handle error responses or validation errors
+            },
+        }
+    );
+};
 
 </script>
 
@@ -40,56 +63,69 @@ import { Head } from '@inertiajs/vue3';
                             <div class="tab-content">
                                 <div class="tab-pane show active dark:border-defaultborder/10" id="personal-info"
                                     aria-labelledby="Personal-item">
-                                    <div class="sm:p-4 p-0">
+                                    <form @submit.prevent="submit">
+                                        <div class="sm:p-4 p-0">
 
-                                        <div class="sm:grid grid-cols-12 gap-6 mb-6">
-                                            <div class="xl:col-span-6 col-span-12">
-                                                <label for="first-name" class="form-label">Name</label>
-                                                <input type="text" class="form-control w-full !rounded-md"
-                                                    id="first-name" placeholder="Enter names">
-                                            </div>
-                                            <div class="xl:col-span-6 col-span-12">
-                                                <label for="last-name" class="form-label">Email</label>
-                                                <input type="email" class="form-control w-full !rounded-md"
-                                                    id="last-name" placeholder="Enter email">
-                                            </div>
-                                            <div class="xl:col-span-6 col-span-12">
-                                                <label for="first-name" class="form-label">Phone Number</label>
-                                                <input type="text" class="form-control w-full !rounded-md"
-                                                    id="first-name" placeholder="Phonr number">
-                                            </div>
-                                            <div class="xl:col-span-3 col-span-12">
-                                                <label for="first-name" class="form-label">Role</label>
-                                                <select class="ti-form-select rounded-sm !py-2 !px-3">
-                                                    <option selected=""> -- select -- </option>
-                                                    <option>A</option>
-                                                    <option>B</option>
-                                                    <option>C</option>
-                                                    <option>D</option>
-                                                </select>
-                                            </div>
-                                            <div class="xl:col-span-3 col-span-12">
-                                                <label for="last-name" class="form-label">Status</label>
-                                                <select class="ti-form-select rounded-sm !py-2 !px-3">
-                                                    <option selected=""> -- select -- </option>
-                                                    <option>A</option>
-                                                    <option>B</option>
-                                                    <option>C</option>
-                                                    <option>D</option>
-                                                </select>
-                                            </div>
+                                            <div class="sm:grid grid-cols-12 gap-6 mb-6">
+                                                <div class="xl:col-span-6 col-span-12">
+                                                    <label for="name" class="form-label">Name</label>
+                                                    <input v-model="form.name" type="text"
+                                                        class="form-control w-full !rounded-md" id="name"
+                                                        placeholder="Enter names">
+                                                    <InputError class="mt-1" :message="form.errors.name" />
+
+                                                </div>
+                                                <div class="xl:col-span-6 col-span-12">
+                                                    <label for="email" class="form-label">Email</label>
+                                                    <input v-model="form.email" type="email"
+                                                        class="form-control w-full !rounded-md" id="email"
+                                                        placeholder="Enter email">
+                                                    <InputError class="mt-1" :message="form.errors.email" />
+
+                                                </div>
+                                                <div class="xl:col-span-6 col-span-12">
+                                                    <label for="phone" class="form-label">Phone Number</label>
+                                                    <input v-model="form.phone" type="text"
+                                                        class="form-control w-full !rounded-md" id="phone"
+                                                        placeholder="Phone number">
+                                                    <InputError class="mt-1" :message="form.errors.phone" />
+
+                                                </div>
+                                                <div class="xl:col-span-3 col-span-12">
+                                                    <label for="role" class="form-label">Role</label>
+                                                    <select v-model="form.role"
+                                                        class="ti-form-select rounded-sm !py-2 !px-3">
+                                                        <option selected="" value=""> -- select -- </option>
+                                                        <option value="Administrator">Administrator</option>
+                                                        <option value="Recieptionist">Recieptionist</option>
+                                                    </select>
+                                                    <InputError class="mt-1" :message="form.errors.role" />
+
+                                                </div>
+                                                <div class="xl:col-span-3 col-span-12">
+                                                    <label for="status" class="form-label">Status</label>
+                                                    <select v-model="form.status"
+                                                        class="ti-form-select rounded-sm !py-2 !px-3">
+                                                        <option selected="" value=""> -- select -- </option>
+                                                        <option value="active">Active</option>
+                                                        <option value="inactive">Inactive</option>
+                                                    </select>
+                                                    <InputError class="mt-1" :message="form.errors.status" />
+
+                                                </div>
 
 
 
+                                            </div>
+
+                                            <div class="sm:grid grid-cols-12 gap-6">
+                                                <div class="xl:col-span-12 col-span-12">
+                                                    <button
+                                                        class="ti-btn ti-btn-primary btn-wave ms-auto float-right">Submit</button>
+                                                </div>
+                                            </div>
                                         </div>
-
-                                        <div class="sm:grid grid-cols-12 gap-6">
-                                            <div class="xl:col-span-12 col-span-12">
-                                                <button type="button"
-                                                    class="ti-btn ti-btn-primary btn-wave ms-auto float-right">Submit</button>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    </form>
                                 </div>
 
                             </div>

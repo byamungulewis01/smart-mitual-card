@@ -10,7 +10,7 @@ defineProps({
     <div class="box-footer border-t-0">
         <div class="flex items-center flex-wrap overflow-auto">
             <div class="mb-2 sm:mb-0">
-                Showing <b>{{ links.meta.from }}</b> to <b>{{ links.meta.to }}</b> of <b>{{ links.meta.total }}</b>
+                Showing <b>{{ links.from }}</b> to <b>{{ links.to }}</b> of <b>{{ links.total }}</b>
                 entries
                 <i class="bi bi-arrow-right ms-2 font-semibold"></i>
             </div>
@@ -22,7 +22,7 @@ defineProps({
                             Previous
                             </Link>
                         </li> -->
-                        <li v-for="(link, index) in links.meta.links" :key="index"
+                        <li v-for="(link, index) in links.links" :key="index"
                             :class="['page-item', link.active ? 'active' : '']">
                             <Link v-if="link.url" :href="link.url" class="page-link px-3 py-[0.375rem]"
                                 v-html="link.label">

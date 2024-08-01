@@ -1,16 +1,21 @@
 <script setup>
+import TablePagination from '@/Components/TablePagination.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
 
 defineProps({
-    canResetPassword: {
-        type: Boolean,
-    },
-    status: {
-        type: String,
-    },
+    users: Object
 });
-
+const status = {
+    active: {
+        title: "Active",
+        class: "badge !rounded-full bg-primary/10 text-primary"
+    },
+    inactive: {
+        title: "Inactive",
+        class: "badge !rounded-full bg-danger/10 text-danger"
+    },
+};
 
 </script>
 
@@ -54,10 +59,11 @@ defineProps({
                             <div class="flex flex-wrap gap-2">
                                 <div>
                                     <input class="form-control form-control-sm" type="text" placeholder="Search Here"
-                                    aria-label=".form-control-sm example">
+                                        aria-label=".form-control-sm example">
                                 </div>
-                                <Link :href="route('users.create')" class="ti-btn ti-btn-primary-full !py-1 !px-2 !text-[0.75rem]">
-                                    <i class="ri-add-line  align-middle"></i>New user
+                                <Link :href="route('users.create')"
+                                    class="ti-btn ti-btn-primary-full !py-1 !px-2 !text-[0.75rem]">
+                                <i class="ri-add-line  align-middle"></i>New user
                                 </Link>
 
                             </div>
@@ -79,15 +85,23 @@ defineProps({
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr class="border-t hover:bg-gray-200 dark:hover:bg-light">
-                                            <td class="!ps-6">1</td>
+                                        <tr v-for="(user, index) in users.data" :key="index" class="border-t hover:bg-gray-200 dark:hover:bg-light">
+                                            <td class="!ps-6">{{ (users.current_page - 1) *
+                                                users.per_page + index + 1 }}</td>
 
-                                            <td><strong>BYAMUNGU Lewis</strong></td>
-                                            <td>byamungulewi@gmail.com</td>
-                                            <td>07866667777</td>
-                                            <td>Administrator</td>
-                                            <td><span class="badge bg-success/10 text-success">Active</span></td>
-                                            <td><i class="bi bi-clock me-1"></i>Nov 12 1994</td>
+                                            <td><strong>{{ user.name }}</strong></td>
+                                            <td>{{ user.email }}</td>
+                                            <td>{{ user.phone }}</td>
+                                            <td>{{ user.role }}</td>
+                                            <!-- <td><span class="badge bg-success/10 text-success">Active</span></td> -->
+                                            <td><span :class="status[user.status].class">{{ status[user.status].title
+                                                }}</span>
+                                        </td>
+                                            <td><i class="bi bi-clock me-1"></i>{{ new
+                                            Date(user.created_at).toLocaleDateString('en-US', {
+                                                month: 'short', day:
+                                                    '2-digit', year: 'numeric'
+                                            }) }}</td>
                                             <td>
                                                 <a aria-label="anchor" href="javascript:void(0);"
                                                     class="ti-btn ti-btn-icon ti-btn-sm ti-btn-info me-2">
@@ -99,79 +113,14 @@ defineProps({
                                                 </a>
                                             </td>
                                         </tr>
-                                        <tr class="border-t hover:bg-gray-200 dark:hover:bg-light">
-                                            <td class="!ps-6">2</td>
 
-                                            <td><strong>Howard Bartlett</strong></td>
-                                            <td>howard@gmail.com</td>
-                                            <td>0783555299</td>
-                                            <td>Administrator</td>
-                                            <td><span class="badge bg-danger/10 text-danger">Inactive</span></td>
-                                            <td><i class="bi bi-clock me-1"></i>Nov 02 1999</td>
-                                            <td>
-                                                <a aria-label="anchor" href="javascript:void(0);"
-                                                    class="ti-btn ti-btn-icon ti-btn-sm ti-btn-info me-2">
-                                                    <i class="ri-edit-line"></i>
-                                                </a>
-                                                <a aria-label="anchor" href="javascript:void(0);"
-                                                    class="ti-btn ti-btn-icon ti-btn-sm ti-btn-danger">
-                                                    <i class="ri-delete-bin-line"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <tr class="border-t hover:bg-gray-200 dark:hover:bg-light">
-                                            <td class="!ps-6">3</td>
-
-                                            <td><strong>Karyn Stuart</strong></td>
-                                            <td>karyn@gmail.com</td>
-                                            <td>078666555</td>
-                                            <td>Recieptionist</td>
-                                            <td><span class="badge bg-danger/10 text-danger">Inactive</span></td>
-                                            <td><i class="bi bi-clock me-1"></i>Nov 02 1999</td>
-                                            <td>
-                                                <a aria-label="anchor" href="javascript:void(0);"
-                                                    class="ti-btn ti-btn-icon ti-btn-sm ti-btn-info me-2">
-                                                    <i class="ri-edit-line"></i>
-                                                </a>
-                                                <a aria-label="anchor" href="javascript:void(0);"
-                                                    class="ti-btn ti-btn-icon ti-btn-sm ti-btn-danger">
-                                                    <i class="ri-delete-bin-line"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
 
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-                        <div class="box-footer border-t-0">
-                            <div class="flex items-center flex-wrap overflow-auto">
-                                <div class="mb-2 sm:mb-0">
-                                    Showing <b>1</b> to <b>10</b> of <b>10</b> entries <i
-                                        class="bi bi-arrow-right ms-2 font-semibold"></i>
-                                </div>
-                                <div class="ms-auto">
-                                    <nav aria-label="Page navigation">
-                                        <ul class="ti-pagination  mb-0">
-                                            <li class="page-item disabled"><a class="page-link px-3 py-[0.375rem]"
-                                                    href="javascript:void(0);">Previous</a></li>
-                                            <li class="page-item"><a class="page-link active px-3 py-[0.375rem]"
-                                                    href="javascript:void(0);">1</a></li>
-                                            <li class="page-item"><a class="page-link px-3 py-[0.375rem]"
-                                                    href="javascript:void(0);">2</a></li>
-                                            <li class="page-item"><a class="page-link px-3 py-[0.375rem]"
-                                                    href="javascript:void(0);">3</a></li>
-                                            <li class="page-item"><a class="page-link px-3 py-[0.375rem]"
-                                                    href="javascript:void(0);">4</a></li>
-                                            <li class="page-item"><a class="page-link px-3 py-[0.375rem]"
-                                                    href="javascript:void(0);">5</a></li>
-                                            <li class="page-item"><a class="page-link px-3 py-[0.375rem]"
-                                                    href="javascript:void(0);">Next</a></li>
-                                        </ul>
-                                    </nav>
-                                </div>
-                            </div>
-                        </div>
+                        <TablePagination :links="users" />
+
                     </div>
                 </div>
             </div>
