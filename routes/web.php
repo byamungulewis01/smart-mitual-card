@@ -11,22 +11,14 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/', function () {
     return to_route('login');
-});
+})->name('home');
+Route::get('/dashboard', function () {
+    return Inertia::render('Dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('guest')->prefix('sector')->name('sector.')->group(function () {
     Route::resource('families', FamilyHeaderController::class);
@@ -43,6 +35,7 @@ Route::middleware('guest')->prefix('sector')->name('sector.')->group(function ()
     });
 });
 Route::middleware('guest')->prefix('irembo')->name('irembo.')->group(function () {
+    Route::get('mutuelle', [IremboController::class,'mutuelle'])->name('mutuelle');
     Route::get('payment-test', [IremboController::class,'test_payment']);
     Route::get('payment-callback', [IremboController::class,'callback'])->name('callback');
     Route::post('payment-test', [IremboController::class,'test_payment_store'])->name('test_payment_store');
@@ -57,7 +50,7 @@ Route::middleware('auth')->group(function () {
     Route::controller(SearchFamilyController::class)->group(function () {
         Route::get('/manual-search', 'manualSearch')->name('manualSearch');
         Route::get('/smart-search', 'smartSearch')->name('smartSearch');
-        Route::get('/family/{id}', 'showFamily')->name('showFamily');
+        Route::get('/family/{family}', 'showFamily')->name('showFamily');
     });
 });
 require __DIR__ . '/auth.php';

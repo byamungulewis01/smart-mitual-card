@@ -11,6 +11,10 @@ use EdwardMuss\Rave\Facades\Rave as Flutterwave;
 class IremboController extends Controller
 {
     //
+    public function mutuelle()
+    {
+        return Inertia::render('Irembo/Index');
+    }
     public function test_payment()
     {
         return Inertia::render('Irembo/TestPayment');

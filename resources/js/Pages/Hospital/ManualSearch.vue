@@ -1,9 +1,21 @@
 <script setup>
+import TablePagination from '@/Components/TablePagination.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, Link } from '@inertiajs/vue3';
-defineProps({
+import { Head, router, Link } from '@inertiajs/vue3';
+import { debounce } from 'lodash';
+import { ref, watch } from 'vue';
+
+const props = defineProps({
     families: Object,
+    family_number: String,
 });
+
+const family_number = ref(props.family_number);
+
+watch(
+    family_number,
+    debounce((q) => router.get(route('manualSearch'), { family_number: q }, { preserveState: true }), 500)
+);
 
 </script>
 
@@ -24,13 +36,13 @@ defineProps({
 
                                     <div class="basis-1/2 flex sm:mt-0 mt-2 items-center">
                                         <div class="input-group">
-                                            <input type="text"
+                                            <input type="number" v-model="family_number"
                                                 class="form-control !rounded-s-sm w-full !bg-light !border-0"
                                                 placeholder="Search Family number"
-                                                aria-describedby="search-contact-member">
+                                                aria-describedby="search-family-member">
                                             <button aria-label="button" type="button"
                                                 class="ti-btn ti-btn-light  !rounded-s-none !mb-0"
-                                                id="search-contact-member"><i
+                                                id="search-family-member"><i
                                                     class="ri-search-line text-[#8c9097] dark:text-white/50"></i></button>
                                         </div>
                                     </div>
@@ -41,7 +53,8 @@ defineProps({
                 </div>
 
 
-                <div v-for="(item, index) in families.data" :key="index" class="xl:col-span-4 lg:col-span-6 md:col-span-6 sm:col-span-12 col-span-12">
+                <div v-for="(item, index) in families.data" :key="index"
+                    class="xl:col-span-4 lg:col-span-6 md:col-span-6 sm:col-span-12 col-span-12">
                     <div class="box">
                         <div class="box-body contact-action">
                             <div class="contact-overlay"></div>
@@ -64,10 +77,10 @@ defineProps({
 
                             </div>
                             <div class="flex items-center justify-center gap-2 contact-hover-buttons">
-                                <a :href="route('showFamily', item.id)" type="button"
+                                <Link :href="route('showFamily', item)" type="button"
                                     class="ti-btn btn-sm ti-btn-light contact-hover-btn !py-1 !px-2 !text-[0.75rem] !font-medium">
-                                    View Details
-                                </a>
+                                View Details
+                                </Link>
                             </div>
                         </div>
                     </div>
@@ -75,6 +88,7 @@ defineProps({
 
 
             </div>
+            <TablePagination v-if="families.meta.total > 10" :links="families.meta" />
 
         </div>
 

@@ -1,6 +1,11 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
+const props = defineProps({
+    family: Object,
+    family_members: Object,
+});
+const item = props.family.data;
 
 </script>
 
@@ -21,21 +26,17 @@ import { Head, Link } from '@inertiajs/vue3';
                             <div class="sm:flex items-center p-5 border-b dark:border-defaultborder/10 border-dashed">
                                 <div>
                                     <span class="avatar avatar-xl avatar-rounded me-4">
-                                        <img src="/assets/images/faces/9.jpg" alt="">
+                                        <img :src="$page.props.asset_url + '/storage/' + item.image" alt="">
                                     </span>
                                 </div>
                                 <div class="flex-grow main-profile-info">
                                     <div class="flex items-center !justify-between">
-                                        <h6 class="font-semibold mb-1 text-black text-[1rem]">Json Taylor</h6>
+                                        <h6 class="font-semibold mb-1 text-black text-[1rem]">{{ item.first_name }} {{
+                                            item.last_name }}</h6>
 
                                     </div>
-                                    <p class="mb-1 !text-black  opacity-[0.7]"> <strong> </strong>1199227733464466
+                                    <p class="mb-1 !text-black  opacity-[0.7]"> {{ item.national_id }}
                                     </p>
-                                    <!-- <p class="text-[0.75rem] text-black mb-6 opacity-[0.5]">
-                                        <span class="me-4 inline-flex"><i
-                                                class="ri-building-line me-1 align-middle"></i>Male</span>
-
-                                    </p> -->
 
                                 </div>
                             </div>
@@ -48,7 +49,8 @@ import { Head, Link } from '@inertiajs/vue3';
                                             <div class="me-2 font-semibold">
                                                 Gender:
                                             </div>
-                                            <span class="text-[0.75rem] text-[#8c9097] dark:text-white/50">Male</span>
+                                            <span class="text-[0.75rem] text-[#8c9097] dark:text-white/50">{{
+                                                item.gender }}</span>
                                         </div>
                                     </li>
                                     <li class="list-group-item">
@@ -56,7 +58,8 @@ import { Head, Link } from '@inertiajs/vue3';
                                             <div class="me-2 font-semibold">
                                                 Category :
                                             </div>
-                                            <span class="text-[0.75rem] text-[#8c9097] dark:text-white/50">A</span>
+                                            <span class="text-[0.75rem] text-[#8c9097] dark:text-white/50">{{
+                                                item.category }}</span>
                                         </div>
                                     </li>
                                     <li class="list-group-item">
@@ -64,8 +67,8 @@ import { Head, Link } from '@inertiajs/vue3';
                                             <div class="me-2 font-semibold">
                                                 Phone :
                                             </div>
-                                            <span class="text-[0.75rem] text-[#8c9097] dark:text-white/50">+(555)
-                                                555-1234</span>
+                                            <span class="text-[0.75rem] text-[#8c9097] dark:text-white/50">{{ item.phone
+                                                }}</span>
                                         </div>
                                     </li>
 
@@ -74,7 +77,8 @@ import { Head, Link } from '@inertiajs/vue3';
                                             <div class="me-2 font-semibold">
                                                 Age :
                                             </div>
-                                            <span class="text-[0.75rem] text-[#8c9097] dark:text-white/50">28</span>
+                                            <span class="text-[0.75rem] text-[#8c9097] dark:text-white/50">{{ item.age
+                                                }}</span>
                                         </div>
                                     </li>
                                     <li class="list-group-item">
@@ -82,8 +86,8 @@ import { Head, Link } from '@inertiajs/vue3';
                                             <div class="me-2 font-semibold">
                                                 Date of Birth :
                                             </div>
-                                            <span class="text-[0.75rem] text-[#8c9097] dark:text-white/50">Nov 12,
-                                                2020</span>
+                                            <span class="text-[0.75rem] text-[#8c9097] dark:text-white/50">{{
+                                                item.dateOfBirth }}</span>
                                         </div>
                                     </li>
                                     <li class="list-group-item">
@@ -91,7 +95,8 @@ import { Head, Link } from '@inertiajs/vue3';
                                             <div class="me-2 font-semibold">
                                                 District :
                                             </div>
-                                            <span class="text-[0.75rem] text-[#8c9097] dark:text-white/50">Rubavu</span>
+                                            <span class="text-[0.75rem] text-[#8c9097] dark:text-white/50">{{
+                                                item.district }}</span>
                                         </div>
                                     </li>
                                     <li class="list-group-item">
@@ -99,8 +104,8 @@ import { Head, Link } from '@inertiajs/vue3';
                                             <div class="me-2 font-semibold">
                                                 Sector :
                                             </div>
-                                            <span
-                                                class="text-[0.75rem] text-[#8c9097] dark:text-white/50">Gisenyi</span>
+                                            <span class="text-[0.75rem] text-[#8c9097] dark:text-white/50">{{
+                                                item.sector }}</span>
                                         </div>
                                     </li>
                                     <li class="list-group-item">
@@ -108,7 +113,8 @@ import { Head, Link } from '@inertiajs/vue3';
                                             <div class="me-2 font-semibold">
                                                 Cell :
                                             </div>
-                                            <span class="text-[0.75rem] text-[#8c9097] dark:text-white/50">Kivumu</span>
+                                            <span class="text-[0.75rem] text-[#8c9097] dark:text-white/50">{{ item.cell
+                                                }}</span>
                                         </div>
                                     </li>
                                     <li class="list-group-item">
@@ -116,8 +122,8 @@ import { Head, Link } from '@inertiajs/vue3';
                                             <div class="me-2 font-semibold">
                                                 Village :
                                             </div>
-                                            <span
-                                                class="text-[0.75rem] text-[#8c9097] dark:text-white/50">Umutekano</span>
+                                            <span class="text-[0.75rem] text-[#8c9097] dark:text-white/50">{{
+                                                item.village }}</span>
                                         </div>
                                     </li>
                                 </ul>
@@ -166,31 +172,35 @@ import { Head, Link } from '@inertiajs/vue3';
                             </div>
                             <div class="box-body !p-0">
                                 <div class="grid grid-cols-12 sm:gap-x-6 m-5">
-
-                                    <div class="xl:col-span-4 lg:col-span-6 md:col-span-6 col-span-12">
+                                    <div v-for="(item, index) in family_members.data" :key="index"
+                                        class="xl:col-span-4 lg:col-span-6 md:col-span-6 col-span-12">
                                         <div class="box !shadow-none border dark:border-defaultborder/10">
                                             <div class="box-body p-6">
                                                 <div class="text-center">
                                                     <span class="avatar avatar-xl avatar-rounded">
-                                                        <img src="/assets/images/faces/2.jpg" alt="">
+                                                        <img :src="$page.props.asset_url + '/storage/' + item.image"
+                                                            alt="">
                                                     </span>
                                                     <div class="mt-2">
-                                                        <p class="mb-0 font-semibold">Samantha May</p>
+                                                        <p class="mb-0 font-semibold">{{ item.first_name }} {{
+                                                            item.last_name }}</p>
 
                                                         <p>
                                                             <span class="font-semibold">ID : </span>
                                                             <span
-                                                                class="text-[0.75rem] opacity-[0.7] mb-1 text-[#8c9097] dark:text-white/50">119992888883338838</span>
+                                                                class="text-[0.75rem] opacity-[0.7] mb-1 text-[#8c9097] dark:text-white/50">{{
+                                                                item.national_id ?? 'not available' }}</span>
                                                         </p>
 
                                                         <p>
                                                             <span class="font-semibold">Age : </span>
                                                             <span
-                                                                class="text-[0.75rem] opacity-[0.7] mb-1 text-[#8c9097] dark:text-white/50">12</span>
+                                                                class="text-[0.75rem] opacity-[0.7] mb-1 text-[#8c9097] dark:text-white/50">{{
+                                                                item.age }}</span>
                                                         </p>
                                                         <p class="mt-3">
-                                                            <span class="badge bg-info/10 text-info rounded-full">
-                                                                Male</span>
+                                                            <span class="badge bg-info/10 text-info rounded-full">{{
+                                                                item.gender }}</span>
 
                                                         </p>
                                                     </div>
@@ -199,167 +209,6 @@ import { Head, Link } from '@inertiajs/vue3';
 
                                         </div>
                                     </div>
-                                    <div class="xl:col-span-4 lg:col-span-6 md:col-span-6 col-span-12">
-                                        <div class="box !shadow-none border dark:border-defaultborder/10">
-                                            <div class="box-body p-6">
-                                                <div class="text-center">
-                                                    <span class="avatar avatar-xl avatar-rounded">
-                                                        <img src="/assets/images/faces/15.jpg" alt="">
-                                                    </span>
-                                                    <div class="mt-2">
-                                                        <p class="mb-0 font-semibold">Andrew Garfield</p>
-
-                                                        <p>
-                                                            <span class="font-semibold">ID : </span>
-                                                            <span
-                                                                class="text-[0.75rem] opacity-[0.7] mb-1 text-[#8c9097] dark:text-white/50">119992888883338838</span>
-                                                        </p>
-
-                                                        <p>
-                                                            <span class="font-semibold">Age : </span>
-                                                            <span
-                                                                class="text-[0.75rem] opacity-[0.7] mb-1 text-[#8c9097] dark:text-white/50">32</span>
-                                                        </p>
-                                                        <p class="mt-3">
-                                                            <span class="badge bg-info/10 text-info rounded-full">
-                                                                Female</span>
-
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="xl:col-span-4 lg:col-span-6 md:col-span-6 col-span-12">
-                                        <div class="box !shadow-none border dark:border-defaultborder/10">
-                                            <div class="box-body p-6">
-                                                <div class="text-center">
-                                                    <span class="avatar avatar-xl avatar-rounded">
-                                                        <img src="/assets/images/faces/5.jpg" alt="">
-                                                    </span>
-                                                    <div class="mt-2">
-                                                        <p class="mb-0 font-semibold">Jessica Cashew</p>
-
-                                                        <p>
-                                                            <span class="font-semibold">ID : </span>
-                                                            <span
-                                                                class="text-[0.75rem] opacity-[0.7] mb-1 text-[#8c9097] dark:text-white/50">119992888883338838</span>
-                                                        </p>
-
-                                                        <p>
-                                                            <span class="font-semibold">Age : </span>
-                                                            <span
-                                                                class="text-[0.75rem] opacity-[0.7] mb-1 text-[#8c9097] dark:text-white/50">20</span>
-                                                        </p>
-                                                        <p class="mt-3">
-                                                            <span class="badge bg-info/10 text-info rounded-full">
-                                                                Male</span>
-
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="xl:col-span-4 lg:col-span-6 md:col-span-6 col-span-12">
-                                        <div class="box !shadow-none border dark:border-defaultborder/10">
-                                            <div class="box-body p-6">
-                                                <div class="text-center">
-                                                    <span class="avatar avatar-xl avatar-rounded">
-                                                        <img src="/assets/images/faces/2.jpg" alt="">
-                                                    </span>
-                                                    <div class="mt-2">
-                                                        <p class="mb-0 font-semibold">Samantha May</p>
-
-                                                        <p>
-                                                            <span class="font-semibold">ID : </span>
-                                                            <span
-                                                                class="text-[0.75rem] opacity-[0.7] mb-1 text-[#8c9097] dark:text-white/50">119992888883338838</span>
-                                                        </p>
-
-                                                        <p>
-                                                            <span class="font-semibold">Age : </span>
-                                                            <span
-                                                                class="text-[0.75rem] opacity-[0.7] mb-1 text-[#8c9097] dark:text-white/50">12</span>
-                                                        </p>
-                                                        <p class="mt-3">
-                                                            <span class="badge bg-info/10 text-info rounded-full">
-                                                                Male</span>
-
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="xl:col-span-4 lg:col-span-6 md:col-span-6 col-span-12">
-                                        <div class="box !shadow-none border dark:border-defaultborder/10">
-                                            <div class="box-body p-6">
-                                                <div class="text-center">
-                                                    <span class="avatar avatar-xl avatar-rounded">
-                                                        <img src="/assets/images/faces/15.jpg" alt="">
-                                                    </span>
-                                                    <div class="mt-2">
-                                                        <p class="mb-0 font-semibold">Andrew Garfield</p>
-
-                                                        <p>
-                                                            <span class="font-semibold">ID : </span>
-                                                            <span
-                                                                class="text-[0.75rem] opacity-[0.7] mb-1 text-[#8c9097] dark:text-white/50">119992888883338838</span>
-                                                        </p>
-
-                                                        <p>
-                                                            <span class="font-semibold">Age : </span>
-                                                            <span
-                                                                class="text-[0.75rem] opacity-[0.7] mb-1 text-[#8c9097] dark:text-white/50">32</span>
-                                                        </p>
-                                                        <p class="mt-3">
-                                                            <span class="badge bg-info/10 text-info rounded-full">
-                                                                Female</span>
-
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="xl:col-span-4 lg:col-span-6 md:col-span-6 col-span-12">
-                                        <div class="box !shadow-none border dark:border-defaultborder/10">
-                                            <div class="box-body p-6">
-                                                <div class="text-center">
-                                                    <span class="avatar avatar-xl avatar-rounded">
-                                                        <img src="/assets/images/faces/5.jpg" alt="">
-                                                    </span>
-                                                    <div class="mt-2">
-                                                        <p class="mb-0 font-semibold">Jessica Cashew</p>
-
-                                                        <p>
-                                                            <span class="font-semibold">ID : </span>
-                                                            <span
-                                                                class="text-[0.75rem] opacity-[0.7] mb-1 text-[#8c9097] dark:text-white/50">119992888883338838</span>
-                                                        </p>
-
-                                                        <p>
-                                                            <span class="font-semibold">Age : </span>
-                                                            <span
-                                                                class="text-[0.75rem] opacity-[0.7] mb-1 text-[#8c9097] dark:text-white/50">20</span>
-                                                        </p>
-                                                        <p class="mt-3">
-                                                            <span class="badge bg-info/10 text-info rounded-full">
-                                                                Male</span>
-
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-
                                 </div>
                             </div>
                         </div>

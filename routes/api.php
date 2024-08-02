@@ -11,10 +11,17 @@ Route::get('/user', function (Request $request) {
 
 Route::post('/get-cardnumber', function (Request $request) {
 
-    $cardNumber = $request->input('card_number');
 
     // Log the card number for now, you can process it as needed
-    Log::info('Received card number: ' . $cardNumber);
+    $UIDresult = $request->input('UIDresult');
+    Log::info('Received card number: ' . $UIDresult);
 
-    return response()->json(['success' => true, 'card_number' => $cardNumber]);
+    // Process the UIDresult as needed
+    // For example, look up the UID in the database and return some information
+
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Card number received: ' . $UIDresult,
+        'uid' => $UIDresult
+    ]);
 });

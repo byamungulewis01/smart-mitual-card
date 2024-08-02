@@ -27,10 +27,10 @@ const submit = () => {
 </script>
 
 <template>
-    <SectorLayout>
+    <IremboLayout>
 
         <Head title="Create Family" />
-        <div class="main-content max-w-5xl mx-auto sm:px-6 lg:px-8">
+        <div class="main-content max-w-4xl mx-auto sm:px-6 lg:px-8">
             <!-- Page Header -->
             <div class="block justify-between page-header md:flex">
                 <div>
@@ -103,5 +103,5 @@ const submit = () => {
 
         </div>
 
-    </SectorLayout>
+    </IremboLayout>
 </template>
