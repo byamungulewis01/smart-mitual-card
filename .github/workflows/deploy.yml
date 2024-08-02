@@ -56,15 +56,15 @@ jobs:
         source: '.'  # Path to your Laravel project
         target: '/home/u752782537/domains/bmglewis.online'  # Destination directory on the server
 
-    - name: Create symbolic link
-      uses: appleboy/ssh-action@master
-      with:
-        host: 31.170.164.6
-        username: u752782537
-        password: Coopevemu@2024
-        port: 65002
-        script: |
-          ln -s /home/u752782537/domains/bmglewis.online/public /home/u752782537/domains/bmglewis.online/public_html
+    # - name: Create symbolic link
+    #   uses: appleboy/ssh-action@master
+    #   with:
+    #     host: 31.170.164.6
+    #     username: u752782537
+    #     password: Coopevemu@2024
+    #     port: 65002
+    #     script: |
+    #       ln -s /home/u752782537/domains/bmglewis.online/public /home/u752782537/domains/bmglewis.online/public_html
 
     - name: SSH into server and run deployment commands
       uses: appleboy/ssh-action@master
