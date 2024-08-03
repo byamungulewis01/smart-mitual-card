@@ -7,11 +7,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchFamilyController;
 use App\Http\Controllers\SectorSettingsController;
 use App\Http\Controllers\UserController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-
-
 
 Route::get('/', function () {
     return to_route('login');
@@ -35,10 +32,13 @@ Route::middleware('guest')->prefix('sector')->name('sector.')->group(function ()
     });
 });
 Route::middleware('guest')->prefix('irembo')->name('irembo.')->group(function () {
-    Route::get('mutuelle', [IremboController::class,'mutuelle'])->name('mutuelle');
-    Route::get('payment-test', [IremboController::class,'test_payment']);
-    Route::get('payment-callback', [IremboController::class,'callback'])->name('callback');
-    Route::post('payment-test', [IremboController::class,'test_payment_store'])->name('test_payment_store');
+    Route::get('mutuelle', [IremboController::class, 'mutuelle'])->name('mutuelle');
+    Route::post('mutuelle', [IremboController::class, 'mutuelleSearch'])->name('mutuelleSearch');
+    Route::get('mutuelle/{family}', [IremboController::class, 'mutuelleShow'])->name('mutuelleShow');
+    Route::post('mutuelle/{family}', [IremboController::class, 'mutuelleChechout'])->name('mutuelleChechout');
+    Route::get('payment-test', [IremboController::class, 'test_payment']);
+    Route::get('payment-callback', [IremboController::class, 'callback'])->name('callback');
+    Route::post('payment-test', [IremboController::class, 'test_payment_store'])->name('test_payment_store');
 });
 
 Route::middleware('auth')->group(function () {
@@ -51,6 +51,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/manual-search', 'manualSearch')->name('manualSearch');
         Route::get('/smart-search', 'smartSearch')->name('smartSearch');
         Route::get('/family/{family}', 'showFamily')->name('showFamily');
+        Route::post('/save-cardnumber', 'saveCardNumber')->name('saveCardNumber');
+        Route::get('/search-person/{cardnumber}', 'searchPerson')->name('searchPerson');
     });
 });
 require __DIR__ . '/auth.php';

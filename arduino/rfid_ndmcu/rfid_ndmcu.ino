@@ -13,8 +13,8 @@ MFRC522 mfrc522(SS_PIN, RST_PIN);  //--> Create MFRC522 instance.
 
 #define ON_Board_LED 2  //--> Defining an On Board LED, used for indicators when the process of connecting to a wifi router
 
-const char* ssid = "BYAMUNGU";
-const char* password = "bmg123456";
+const char* ssid = "CANALBOX-43E3";
+const char* password = "jean.kayiranga";
 
 ESP8266WebServer server(80);  //--> Server on port 80
 
@@ -68,7 +68,7 @@ void loop() {
     //Post Data
     postData = "UIDresult=" + UIDresultSend;
   
-    http.begin(wifiClient, "http://172.20.10.2/smart-mitual-card/api/get-cardnumber");  //Specify request destination
+    http.begin(wifiClient, "http://192.168.1.78/smart-mitual-card/api/get-cardnumber");  //Specify request destination
     http.addHeader("Content-Type", "application/x-www-form-urlencoded"); //Specify content-type header
    
     int httpCode = http.POST(postData);   //Send the request
@@ -85,7 +85,7 @@ void loop() {
 
       if (!error) {
         // Assuming the Laravel API returns a JSON object with a "message" field
-        const char* uid = doc["uid"];
+        const char* uid = doc["card_number"];
         Serial.print("CardNumber is: ");
         Serial.println(uid);
         

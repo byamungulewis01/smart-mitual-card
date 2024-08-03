@@ -15,4 +15,16 @@ class HospitalCard extends Model
         'status',
         'user_id',
     ];
+    public function family()
+    {
+        return $this->belongsTo(FamilyHeader::class, 'family_header_id');
+    }
+    public function member()
+    {
+        return $this->belongsTo(FamilyMember::class, 'family_member_id');
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

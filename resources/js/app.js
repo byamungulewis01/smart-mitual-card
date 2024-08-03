@@ -1,4 +1,4 @@
-// import './bootstrap';
+import "./bootstrap";
 import "../css/app.css";
 import "../css/style.css";
 
@@ -8,6 +8,7 @@ import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { ZiggyVue } from "../../vendor/tightenco/ziggy";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
+// import Echo from "laravel-echo";
 
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 
@@ -29,3 +30,6 @@ createInertiaApp({
         color: "#4B5563",
     },
 });
+
+// console.log(Echo);
+// console.log(Echo);

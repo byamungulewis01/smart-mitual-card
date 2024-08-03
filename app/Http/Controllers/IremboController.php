@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Inertia\Inertia;
-use GuzzleHttp\Client;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
+use App\Http\Resources\FamilyHeaderResource;
+use App\Models\FamilyHeader;
 use EdwardMuss\Rave\Facades\Rave as Flutterwave;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class IremboController extends Controller
 {
@@ -14,6 +14,30 @@ class IremboController extends Controller
     public function mutuelle()
     {
         return Inertia::render('Irembo/Index');
+    }
+    public function mutuelleSearch(Request $request)
+    {
+        $request->validate([
+            'national_id' => 'required|numeric|digits:16|exists:family_headers,national_id',
+            'amount' => 'required|numeric',
+        ]);
+        $family = FamilyHeader::where('national_id', $request->national_id)->first();
+
+        $amount = $request->amount;
+        return to_route('irembo.mutuelleShow', compact('family', 'amount'));
+    }
+    public function mutuelleShow(FamilyHeader $family)
+    {
+        $family = new FamilyHeaderResource($family);
+        $amount = (int) request('amount');
+
+        return Inertia::render('Irembo/Show', compact('family', 'amount'));
+    }
+    public function mutuelleChechout($id)
+    {
+        $reference = Flutterwave::generateReference();
+
+        return redirect('https://nzizatraining.ac.rw');
     }
     public function test_payment()
     {
@@ -35,13 +59,13 @@ class IremboController extends Controller
             'customer' => [
                 'email' => 'byamungulewis@gmail.com',
                 "phone_number" => $request->phone,
-                "name" => 'Lewis BMG'
+                "name" => 'Lewis BMG',
             ],
 
             "customizations" => [
                 "title" => 'Buy Me Coffee',
-                "description" => "Let express love of coffee"
-            ]
+                "description" => "Let express love of coffee",
+            ],
         ];
 
         $payment = Flutterwave::initializePayment($data);
@@ -83,7 +107,6 @@ class IremboController extends Controller
     //     ]);
 
     //     $responseBody = json_decode($response->getBody(), true);
-
 
     //     if ($responseBody['status'] !== 'success') {
     //         return redirect()->back()->with('error', 'Unable to initiate payment');

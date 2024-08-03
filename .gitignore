@@ -5,7 +5,6 @@
 /public/storage
 /storage/*.key
 /vendor
-.env
 .env.backup
 .env.production
 .phpactor.json
@@ -22,3 +21,4 @@ index.php
 .htaccess
 /public/_index.php
 public/_.htaccess
+.env
