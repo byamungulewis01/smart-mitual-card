@@ -35,10 +35,8 @@ Route::middleware('guest')->prefix('irembo')->name('irembo.')->group(function ()
     Route::get('mutuelle', [IremboController::class, 'mutuelle'])->name('mutuelle');
     Route::post('mutuelle', [IremboController::class, 'mutuelleSearch'])->name('mutuelleSearch');
     Route::get('mutuelle/{family}', [IremboController::class, 'mutuelleShow'])->name('mutuelleShow');
-    Route::post('mutuelle/{family}', [IremboController::class, 'mutuelleChechout'])->name('mutuelleChechout');
-    Route::get('payment-test', [IremboController::class, 'test_payment']);
-    Route::get('payment-callback', [IremboController::class, 'callback'])->name('callback');
-    Route::post('payment-test', [IremboController::class, 'test_payment_store'])->name('test_payment_store');
+    Route::get('mutuelle-pay/success', [IremboController::class, 'mutuellePaySuccess'])->name('mutuellePaySuccess');
+    Route::post('mutuelleChechout', [IremboController::class, 'mutuelleChechout'])->name('mutuelleChechout');
 });
 
 Route::middleware('auth')->group(function () {

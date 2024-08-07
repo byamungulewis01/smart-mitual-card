@@ -11,12 +11,14 @@ const family = props.family.data;
 
 const form = useForm({
     national_id: family.national_id,
+    family_id: family.id,
     amount: props.amount,
+    phone: '',
 
 });
 
 const submit = () => {
-    form.post(route('irembo.mutuelleChechout', family.id),
+    form.post(route('irembo.mutuelleChechout'),
         {
             onSuccess: () => {
                 form.reset();
@@ -83,6 +85,7 @@ const submit = () => {
 
                         </div>
                     </div>
+
                     <div class="p-5 dark:border-defaultborder/10">
                         <p class="text-[.9375rem] mb-2 me-6 font-semibold">Applicant Details :</p>
                         <ul class="list-group">
@@ -121,6 +124,20 @@ const submit = () => {
                             </li>
                         </ul>
                     </div>
+                    <div class="sm:p-4 p-2">
+
+                        <div class="sm:grid grid-cols-12 gap-4">
+                            <div class="xl:col-span-6 col-span-12">
+                                <label for="amount" class="form-label">Phone Number</label>
+                                <input type="text" v-model="form.phone" required class="form-control w-full !rounded-md"
+                                    id="amount" placeholder="078xxxxxxx">
+                                <InputError class="mt-1" :message="form.errors.phone" />
+
+                            </div>
+                        </div>
+
+                    </div>
+
 
                 </div>
                 <div class="box-footer shadow-lg !border-t-0">

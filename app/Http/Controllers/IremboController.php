@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\FamilyHeaderResource;
 use App\Models\FamilyHeader;
-use EdwardMuss\Rave\Facades\Rave as Flutterwave;
+use App\Models\PaypackTransaction;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Paypack\Paypack;
 
 class IremboController extends Controller
 {
@@ -33,85 +34,45 @@ class IremboController extends Controller
 
         return Inertia::render('Irembo/Show', compact('family', 'amount'));
     }
-    public function mutuelleChechout($id)
+
+    public function mutuelleChechout(Request $request)
     {
-        $reference = Flutterwave::generateReference();
+        try {
+            $request->validate([
+                'amount' => 'required|numeric',
+                'phone' => 'required|numeric|digits:10',
+            ]);
+        
+            $paypack = new Paypack();
 
-        return redirect('https://nzizatraining.ac.rw');
-    }
-    public function test_payment()
-    {
-        return Inertia::render('Irembo/TestPayment');
-    }
-    public function test_payment_store(Request $request)
-    {
-        //This generates a payment reference
-        $reference = Flutterwave::generateReference();
+            $paypack->config([
+                'client_id' => env('PAYPACK_CLIENT_ID'),
+                'client_secret' => env('PAYPACK_CLIENT_SECRET'),
+            ]);
 
-        // Enter the details of the payment
-        $data = [
-            'payment_options' => 'card,banktransfer',
-            'amount' => $request->amount,
-            'email' => 'byamungulewis@gmail.com',
-            'tx_ref' => $reference,
-            'currency' => "KES",
-            'redirect_url' => route('irembo.callback'),
-            'customer' => [
-                'email' => 'byamungulewis@gmail.com',
-                "phone_number" => $request->phone,
-                "name" => 'Lewis BMG',
-            ],
+            $cashin = $paypack->Cashin([
+                'phone' => $request->phone,
+                'amount' => $request->amount,
+            ]);
 
-            "customizations" => [
-                "title" => 'Buy Me Coffee',
-                "description" => "Let express love of coffee",
-            ],
-        ];
+            PaypackTransaction::create([
+                'family_id' => $request->family_id,
+                'ref' => $cashin['ref'],
+                'amount' => $request->amount,
+                'phone' => $request->phone,
+            ]);
 
-        $payment = Flutterwave::initializePayment($data);
-
-        if ($payment['status'] !== 'success') {
-            // notify something went wrong
-            return;
+            return to_route('irembo.mutuellePaySuccess');
+        } catch (\Throwable $th) {
+            //throw $th;
+            return back()->with('error', 'some thing went wrong');
         }
 
-        return redirect($payment['data']['link']);
     }
-    // public function test_payment_store(Request $request)
-    // {
-    //     $client = new Client();
 
-    //     $reference = 'txn_' . time(); // Unique transaction reference
-    //     $data = [
-    //         'tx_ref' => $reference,
-    //         'amount' => $request->amount,
-    //         'currency' => 'NGN',
-    //         'redirect_url' => route('irembo.payment.callback'),
-    //         'payment_options' => 'card,banktransfer',
-    //         'customer' => [
-    //             'email' => 'byamungulewis@gmail.com',
-    //             'name' => $request->name,
-    //         ],
-    //         'customizations' => [
-    //             'title' => 'Payment for Service',
-    //             'description' => 'Payment for XYZ service',
-    //         ]
-    //     ];
+    public function mutuellePaySuccess()
+    {
+        return Inertia::render('Irembo/PaymentSuccess');
+    }
 
-    //     $response = $client->request('POST', 'https://api.flutterwave.com/v3/payments', [
-    //         'headers' => [
-    //             'Authorization' => 'Bearer ' . config('services.flutterwave.secret_key'),
-    //             'Content-Type' => 'application/json',
-    //         ],
-    //         'json' => $data,
-    //     ]);
-
-    //     $responseBody = json_decode($response->getBody(), true);
-
-    //     if ($responseBody['status'] !== 'success') {
-    //         return redirect()->back()->with('error', 'Unable to initiate payment');
-    //     }
-
-    //     return redirect($responseBody['data']['link']);
-    // }
 }
