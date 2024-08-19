@@ -174,28 +174,38 @@ const submit = () => {
                                     <div>
                                         <span class="block text-[#8c9097] dark:text-white/50 text-[0.75rem]">Pay
                                             Status</span>
-                                        <span
+                                        <span v-if="item.payment"
                                             class="block text-[1rem] p-2 font-semibold dark:text-defaulttextcolor/70"><span
-                                                class="badge bg-danger text-white">Not Payed</span></span>
+                                                class="badge bg-success text-white">Payed </span></span>
+                                        <span v-else
+                                            class="block text-[1rem] p-2 font-semibold dark:text-defaulttextcolor/70"><span
+                                                class="badge bg-danger text-white">Not Payed </span></span>
                                     </div>
                                     <div>
                                         <span class="block text-[#8c9097] dark:text-white/50 text-[0.75rem]">Last pay
                                             date</span>
-                                        <span
-                                            class="block text-[.875rem] font-semibold dark:text-defaulttextcolor/70">05,July
-                                            2023</span>
+                                        <span v-if="item.payment"
+                                            class="block text-[.875rem] font-semibold dark:text-defaulttextcolor/70">{{ new
+                                                Date(item.payment.created_at).toLocaleDateString('en-US', {
+                                                    month: 'short', day:
+                                                        '2-digit', year: 'numeric'
+                                                }) }}</span>
+                                        <span v-else
+                                            class="block text-[.875rem] font-semibold dark:text-defaulttextcolor/70">Date not available</span>
                                     </div>
                                     <div class="task-details-progress">
                                         <span class="block text-[#8c9097] dark:text-white/50 text-[0.75rem] mb-1">Mutual
                                             year</span>
-                                        <span
-                                            class="block text-[.875rem] font-semibold dark:text-defaulttextcolor/70">2023</span>
+                                        <span v-if="item.payment"
+                                            class="block text-[.875rem] font-semibold dark:text-defaulttextcolor/70">{{ item.payment.year }}</span>
+                                        <span v-else
+                                            class="block text-[.875rem] font-semibold dark:text-defaulttextcolor/70">2023 - 2024</span>
                                     </div>
                                     <div>
                                         <span class="block text-[#8c9097] dark:text-white/50 text-[0.75rem]">Amount
                                             Paid</span>
-                                        <span
-                                            class="block text-[.875rem]  dark:text-defaulttextcolor/70 font-semibold">12,000
+                                        <span v-if="item.payment"
+                                            class="block text-[.875rem]  dark:text-defaulttextcolor/70 font-semibold">{{ item.payment.amount.toLocaleString() }}
                                             Rfw</span>
                                     </div>
                                 </div>

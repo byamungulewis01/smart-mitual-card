@@ -1,20 +1,30 @@
 <?php
 
-use App\Http\Controllers\FamilyHeaderController;
-use App\Http\Controllers\FamilyMemberController;
+use App\Models\User;
+use Inertia\Inertia;
+use App\Models\HospitalCard;
+use Illuminate\Support\Facades\Route;
+use App\Http\Resources\SearchResource;
+use App\Http\Controllers\CardController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\IremboController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\FamilyHeaderController;
+use App\Http\Controllers\FamilyMemberController;
 use App\Http\Controllers\SearchFamilyController;
 use App\Http\Controllers\SectorSettingsController;
-use App\Http\Controllers\UserController;
-use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 Route::get('/', function () {
     return to_route('login');
 })->name('home');
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+    $numbers = [
+        'users' => User::count(),
+        'cards' => HospitalCard::withTrashed()->count(),
+        'admissions' => 12,
+    ];
+    $cards = HospitalCard::withTrashed()->orderByDesc('id')->limit(10)->get();
+    return Inertia::render('Dashboard', ['cards' => SearchResource::collection($cards), 'numbers' => $numbers]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('guest')->prefix('sector')->name('sector.')->group(function () {
@@ -51,6 +61,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/family/{family}', 'showFamily')->name('showFamily');
         Route::post('/save-cardnumber', 'saveCardNumber')->name('saveCardNumber');
         Route::get('/search-person/{cardnumber}', 'searchPerson')->name('searchPerson');
+    });
+    Route::controller(CardController::class)->prefix('cards')->name('cards.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::delete('/{id}', 'destroy')->name('destroy');
     });
 });
 require __DIR__ . '/auth.php';

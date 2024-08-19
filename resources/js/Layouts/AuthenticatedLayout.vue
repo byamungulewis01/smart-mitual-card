@@ -78,6 +78,9 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('smartSearch')" :active="route().current('smartSearch')">
                                     Smart Search
                                 </NavLink>
+                                <NavLink :href="route('cards.index')" :active="route().current('cards.index')">
+                                    Cards List
+                                </NavLink>
                             </div>
                         </div>
 

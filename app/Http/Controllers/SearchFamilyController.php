@@ -36,7 +36,7 @@ class SearchFamilyController extends Controller
             'type' => 'required',
             'cardNumber' => 'required',
         ]);
-        $check = HospitalCard::where('card_number', $request->cardNumber)->where('status', 'active')->first();
+        $check = HospitalCard::withTrashed()->where('card_number', $request->cardNumber)->where('status', 'active')->first();
         if ($check) {
             return back()->with('warning', 'Card number is already in use by another');
         }
