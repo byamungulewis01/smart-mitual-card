@@ -27,7 +27,7 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard', ['cards' => SearchResource::collection($cards), 'numbers' => $numbers]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('guest')->prefix('sector')->name('sector.')->group(function () {
+Route::prefix('sector')->name('sector.')->group(function () {
     Route::resource('families', FamilyHeaderController::class);
     Route::get('families/getSectors/{district}', [FamilyHeaderController::class, 'getSectors'])->name('families.getSectors');
     Route::get('families/getCells/{sector}', [FamilyHeaderController::class, 'getCells'])->name('families.getCells');
@@ -41,7 +41,7 @@ Route::middleware('guest')->prefix('sector')->name('sector.')->group(function ()
         Route::delete('/', 'destroy')->name('destroy');
     });
 });
-Route::middleware('guest')->prefix('irembo')->name('irembo.')->group(function () {
+Route::prefix('irembo')->name('irembo.')->group(function () {
     Route::get('mutuelle', [IremboController::class, 'mutuelle'])->name('mutuelle');
     Route::post('mutuelle', [IremboController::class, 'mutuelleSearch'])->name('mutuelleSearch');
     Route::get('mutuelle/{family}', [IremboController::class, 'mutuelleShow'])->name('mutuelleShow');

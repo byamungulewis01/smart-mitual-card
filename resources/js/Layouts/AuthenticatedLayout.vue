@@ -65,13 +65,28 @@ const showingNavigationDropdown = ref(false);
                             </div>
 
                             <!-- Navigation Links -->
-                            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                            <div v-if="$page.props.auth.user.role == 'admin'" class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
                                 </NavLink>
                                 <NavLink :href="route('users.index')" :active="route().current('users.index') || route().current('users.create') || route().current('users.edit')">
                                     Users
                                 </NavLink>
+                                <NavLink :href="route('manualSearch')" :active="route().current('manualSearch')">
+                                    Manual Search
+                                </NavLink>
+                                <NavLink :href="route('smartSearch')" :active="route().current('smartSearch')">
+                                    Smart Search
+                                </NavLink>
+                                <NavLink :href="route('cards.index')" :active="route().current('cards.index')">
+                                    Cards List
+                                </NavLink>
+                            </div>
+                            <div v-else class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
+                                    Dashboard
+                                </NavLink>
+
                                 <NavLink :href="route('manualSearch')" :active="route().current('manualSearch')">
                                     Manual Search
                                 </NavLink>

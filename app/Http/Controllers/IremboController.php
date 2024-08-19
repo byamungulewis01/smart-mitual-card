@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\FamilyHeaderResource;
-use App\Models\FamilyHeader;
-use App\Models\PaypackTransaction;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Paypack\Paypack;
+use App\Models\Setting;
+use App\Models\FamilyHeader;
+use Illuminate\Http\Request;
+use App\Models\MutualPayment;
+use App\Models\PaypackTransaction;
+use App\Http\Resources\FamilyHeaderResource;
 
 class IremboController extends Controller
 {
@@ -42,25 +44,37 @@ class IremboController extends Controller
                 'amount' => 'required|numeric',
                 'phone' => 'required|numeric|digits:10',
             ]);
-        
-            $paypack = new Paypack();
 
-            $paypack->config([
-                'client_id' => env('PAYPACK_CLIENT_ID'),
-                'client_secret' => env('PAYPACK_CLIENT_SECRET'),
-            ]);
+            $setting = Setting::where('name', 'payment')->first();
+            if ($setting->value) {
 
-            $cashin = $paypack->Cashin([
-                'phone' => $request->phone,
-                'amount' => $request->amount,
-            ]);
+                $paypack = new Paypack();
 
-            PaypackTransaction::create([
-                'family_id' => $request->family_id,
-                'ref' => $cashin['ref'],
-                'amount' => $request->amount,
-                'phone' => $request->phone,
-            ]);
+                $paypack->config([
+                    'client_id' => env('PAYPACK_CLIENT_ID'),
+                    'client_secret' => env('PAYPACK_CLIENT_SECRET'),
+                ]);
+
+                $cashin = $paypack->Cashin([
+                    'phone' => $request->phone,
+                    'amount' => $request->amount,
+                ]);
+
+                PaypackTransaction::create([
+                    'type' => 'mutual',
+                    'family_id' => $request->family_id,
+                    'ref' => $cashin['ref'],
+                    'amount' => $request->amount,
+                    'phone' => $request->phone,
+                ]);
+            } else {
+
+                MutualPayment::create([
+                    'family_header_id' => $request->family_id,
+                    'year' => '2024 - 2025',
+                    'amount' => $request->amount,
+                ]);
+            }
 
             return to_route('irembo.mutuellePaySuccess');
         } catch (\Throwable $th) {
